@@ -1,0 +1,25 @@
+{
+  "todo": {
+    "title": {
+      "create": "Create Todo",
+      "edit": "Edit Todo"
+    },
+    "table": {
+      "id": "ID",
+      "title": "Title",
+      "completed": "Completed"
+    },
+    "form": {
+      "title": "Title",
+      "completed": "Completed"
+    },
+    "formPlaceholder": {
+      "title": "Enter title"
+    },
+    "alert": {
+      "successCreated": "Todo has been created",
+      "successUpdated": "Todo has been updated",
+      "successDeleted": "Todo has been deleted"
+    }
+  }
+}
