@@ -43,13 +43,14 @@ const baseQueryWithReauth: BaseQueryFn<
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock()
   let result = await baseQuery(args, api, extraOptions)
+
   if (result.error && result.error.status === 401) {
     // checking whether the mutex is locked
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
       try {
         const refreshResult = (await baseQuery(
-          '/v1/auth/refresh',
+          { url: '/v1/auth/refresh', method: 'POST' },
           api,
           extraOptions
         )) as { data: IAuthResponseToken }

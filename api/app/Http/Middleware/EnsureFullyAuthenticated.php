@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\V1\Auth\AuthService;
 use App\Traits\ResponseApi;
 use Closure;
-use App\Helpers\Constant\RoleConstant;
+use App\Helpers\Constants\RoleConstant;
 use Illuminate\Http\Request;
 
 class EnsureFullyAuthenticated

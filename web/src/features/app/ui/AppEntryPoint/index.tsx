@@ -6,6 +6,7 @@ import { useRouter } from '@/plugins'
 
 // Antd
 import { ConfigProvider as AntdConfigProvider } from 'antd'
+import { StyleProvider } from '@ant-design/cssinjs'
 
 // Custom Hooks
 import { useAppDispatch } from '@/features/app/hooks/app.hook'
@@ -69,7 +70,9 @@ const AppEntryPoint = () => {
         }
       }}
     >
-      <Suspense fallback={'Loading...'}>{routes}</Suspense>
+      <StyleProvider hashPriority='high'>
+        <Suspense fallback={'Loading...'}>{routes}</Suspense>
+      </StyleProvider>
     </AntdConfigProvider>
   )
 }

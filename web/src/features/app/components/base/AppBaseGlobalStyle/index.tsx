@@ -1,6 +1,9 @@
 // Styled Components
 import { createGlobalStyle } from 'styled-components'
 
+// Constant
+import { APP_COLOR_LIGHT } from '@/features/app/constant/app-style.constant'
+
 const styled = { createGlobalStyle }
 
 const AppBaseGlobalStyle = styled.createGlobalStyle`
@@ -11,6 +14,7 @@ const AppBaseGlobalStyle = styled.createGlobalStyle`
 
   body {
     font-family: 'DmSans-Regular', Arial, Helvetica, sans-serif;
+    background-color: ${APP_COLOR_LIGHT.BACKGROUND} !important;
   }
 `
 

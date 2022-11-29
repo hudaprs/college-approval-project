@@ -3,6 +3,7 @@ import { AUTH_ROLE } from '@/features/auth/constant/auth-role.constant'
 
 export interface IAuthToken {
   token: string | null
+  refresh_token: string | null
 }
 
 export interface IAuthAuthenticatedUser {

@@ -26,9 +26,12 @@
       "notComplete": "Tidak Selesai"
     },
     "table": {
+      "createdAt": "Dibuat Pada",
+      "updatedAt": "Diubah Pada",
       "action": "Aksi"
     },
     "action": {
+      "show": "Lihat",
       "edit": "Ubah",
       "submit": "Kirim",
       "cancel": "Batal",
@@ -52,7 +55,18 @@
       "menu": "Menu",
       "dashboard": "Beranda",
       "backOffice": "Back Office",
-      "todo": "Todo"
+      "master": {
+        "master": "Master",
+        "company": "Perusahaan"
+      },
+      "projectManagement": {
+        "projectManagement": "Manajemen Proyek",
+        "project": "Proyek"
+      }
+    },
+    "pagination": {
+      "total": "Total",
+      "items": "Item"
     }
   }
 }

@@ -14,11 +14,11 @@ import { ETC_TABLE_SLICE_INITIAL_STATE } from '@/features/etc/constant/table/etc
 
 // Initial State
 const PAGINATION_INITIAL_VALUE: IEtcTablePagination = {
-  pageNumber: 0, //  set initial value, 0 mean 1, 1 mean 0
+  page: 0, //  set initial value, 0 mean 1, 1 mean 0
   limit: 10,
   sort: 'desc',
-  column: '',
-  search: ''
+  column: undefined,
+  search: undefined
 }
 const initialState: IEtcTableSliceInitialState = ETC_TABLE_SLICE_INITIAL_STATE
 
@@ -37,9 +37,9 @@ const etcTable = createSlice({
         _table.push({
           id: table.id,
           limit: table?.limit || 10,
-          column: table?.column || '',
+          column: table?.column || undefined,
           sort: table?.sort || 'desc',
-          pageNumber: 1,
+          page: 1,
           search: ''
         })
       })

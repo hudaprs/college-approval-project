@@ -21,11 +21,10 @@ const AppBaseLayout = styled(
     <Layout {...omit(rest, ['isContent', 'collapsed'])} />
   )
 )`
-  background-color: ${APP_COLOR_LIGHT.BACKGROUND};
+  background-color: ${APP_COLOR_LIGHT.BACKGROUND} !important;
 `
 
 const AppBaseLayoutHeader = styled(Header)`
-  background-color: #fff;
   width: 100%;
 `
 

@@ -26,6 +26,15 @@ const AppBaseModal = memo((props: IModalProps) => {
   return (
     <StyledModal
       {...props}
+      okButtonProps={{
+        ...props?.okButtonProps,
+        style: {
+          ...props?.okButtonProps?.style,
+          backgroundColor:
+            props?.okButtonProps?.style?.backgroundColor ||
+            APP_COLOR_LIGHT.PRIMARY
+        }
+      }}
       centered={props?.centered}
       maskClosable={props?.maskClosable}
       okText={props?.okText ? props?.okText : t('app.action.submit')}
