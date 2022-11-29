@@ -1,0 +1,38 @@
+{
+  "project": {
+    "title": {
+      "show": "Project Detail",
+      "create": "Create Project",
+      "edit": "Edit Project"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "budget": "Budget",
+      "documents": "Documents",
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "form": {
+      "name": "Name",
+      "budget": "Budget",
+      "documents": "Documents",
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date"
+    },
+    "formPlaceholder": {
+      "name": "Enter name",
+      "budget": "Enter budget",
+      "description": "Enter description",
+      "startDate": "Pick start date",
+      "endDate": "Pick end date"
+    },
+    "alert": {
+      "successCreated": "Project has been created",
+      "successUpdated": "Project has been updated",
+      "successDeleted": "Project has been deleted"
+    }
+  }
+}

@@ -18,11 +18,11 @@ import {
 } from './components'
 
 // Antd
-import { MenuProps, Modal } from 'antd'
+import { MenuProps } from 'antd'
 import {
-  EditOutlined,
   DashboardOutlined,
-  ExclamationCircleOutlined
+  PartitionOutlined,
+  ProjectOutlined
 } from '@ant-design/icons'
 
 // i18n
@@ -44,9 +44,6 @@ import { useAuth } from '@/features/auth/hooks/auth.hook'
 import AppImage from '@/assets/images/app.png'
 import LogoutIcon from '@/assets/images/icon/logout.png'
 
-// Modal
-const { confirm } = Modal
-
 const AppLayoutBackOffice = memo(() => {
   // Hook
   const location = useLocation()
@@ -67,10 +64,28 @@ const AppLayoutBackOffice = memo(() => {
         onClick: () => navigate('/back-office/dashboard')
       },
       {
-        key: '/back-office/todo',
-        icon: <EditOutlined />,
-        label: t('app.menu.todo'),
-        onClick: () => navigate('/back-office/todo')
+        key: '/back-office/master',
+        icon: <PartitionOutlined />,
+        label: t('app.menu.master.master'),
+        children: [
+          {
+            key: '/back-office/master/companies',
+            label: t('app.menu.master.company'),
+            onClick: () => navigate('/back-office/master/companies')
+          }
+        ]
+      },
+      {
+        key: '/back-office/project-management',
+        icon: <ProjectOutlined />,
+        label: t('app.menu.projectManagement.projectManagement'),
+        children: [
+          {
+            key: '/back-office/project-management/projects',
+            label: t('app.menu.projectManagement.project'),
+            onClick: () => navigate('/back-office/project-management/projects')
+          }
+        ]
       }
     ]
   }, [t, navigate])

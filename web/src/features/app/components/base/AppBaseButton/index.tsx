@@ -30,7 +30,7 @@ const AppBaseButton = styled((props: IAppBaseButtonProps) => (
   color: ${props =>
     !props?.type && props?.fontColor ? props?.fontColor : undefined};
   width: ${props => (props?.width ? `${props.width}px` : 'auto')};
-  height: ${props => (props?.height ? `${props.height}px` : 'auto')};
+  height: ${props => (props?.height ? `${props.height}px` : 'auto')} !important;
   border-radius: 10px;
   font-weight: 500px;
   font-size: 16px;

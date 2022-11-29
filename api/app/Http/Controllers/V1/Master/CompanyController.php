@@ -25,9 +25,9 @@ class CompanyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->success('Get company list success', $this->companyService->getList());
+        return $this->success('Get company list success', $this->companyService->getList($request));
     }
 
     /**

@@ -7,9 +7,9 @@ import { Divider } from 'antd'
 // Interfaces
 import { IAppBaseDividerProps } from './interfaces'
 
-const AppBaseDivider = styled(Divider).attrs(
-  (props): IAppBaseDividerProps => props
-)<IAppBaseDividerProps>`
+const AppBaseDivider = styled((props: IAppBaseDividerProps) => (
+  <Divider {...props} />
+))`
   display: flex;
   align-items: center;
 `

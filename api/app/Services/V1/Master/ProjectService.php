@@ -2,11 +2,12 @@
 
 namespace App\Services\V1\Master;
 
+use App\Helpers\Queries\Query;
 use App\Http\Resources\V1\Master\ProjectCollection;
 use App\Models\Project;
 use App\Services\V1\Auth\AuthService;
 use App\Traits\ResponseApi;
-use Config\RoleConstant;
+use App\Helpers\Constants\RoleConstant;
 use Illuminate\Http\Request;
 
 class ProjectService
@@ -34,15 +35,15 @@ class ProjectService
         $request->validate($validation);
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        $model = Project::query();
+        $query = new Query(new Project, $request);
 
         if ($this->authService->roleContain([RoleConstant::CLIENT])) {
-            $model = $model->where('user_id', $this->authService->currentUser()->id);
+            $query = $query->where('user_id', $this->authService->currentUser()->id);
         }
 
-        return new ProjectCollection($model->paginate(10));
+        return new ProjectCollection($query->paginate(10));
     }
 
     public function getDetail($id)
@@ -57,8 +58,8 @@ class ProjectService
         $project->budget = $request->get('budget');
         $project->documents = $request->get('documents');
         $project->description = $request->get('description');
-        $project->start_date = $request->get('start_date');
-        $project->end_date = $request->get('end_date');
+        $project->start_date = date('Y-m-d', strtotime($request->get('start_date')));
+        $project->end_date = date('Y-m-d', strtotime($request->get('end_date')));
 
         // Only insert in the first create / not edit
         if (!$id) {

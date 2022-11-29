@@ -26,9 +26,12 @@
       "notComplete": "Not Complete"
     },
     "table": {
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
       "action": "Action"
     },
     "action": {
+      "show": "Show",
       "edit": "Edit",
       "submit": "Submit",
       "cancel": "Cancel",
@@ -52,7 +55,18 @@
       "menu": "Menu",
       "dashboard": "Dashboard",
       "backOffice": "Back Office",
-      "todo": "Todo"
+      "master": {
+        "master": "Master",
+        "company": "Company"
+      },
+      "projectManagement": {
+        "projectManagement": "Project Management",
+        "project": "Project"
+      }
+    },
+    "pagination": {
+      "total": "Total",
+      "items": "Items"
     }
   }
 }

@@ -1,0 +1,38 @@
+{
+  "project": {
+    "title": {
+      "show": "Detail Proyek",
+      "create": "Tambah Proyek",
+      "edit": "Ubah Proyek"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nama",
+      "budget": "Anggaran",
+      "documents": "Dokumen",
+      "description": "Deskripsi",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "form": {
+      "name": "Nama",
+      "budget": "Anggaran",
+      "documents": "Dokumen",
+      "description": "Deskripsi",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai"
+    },
+    "formPlaceholder": {
+      "name": "Masukkan nama",
+      "budget": "Masukkan anggaran",
+      "description": "Masukkan deskripsi",
+      "startDate": "Pilih tanggal mulai",
+      "endDate": "Pilih tanggal selesai"
+    },
+    "alert": {
+      "successCreated": "Proyek berhasil dibuat",
+      "successUpdated": "Proyek berhasil diubah",
+      "successDeleted": "Proyek berhasil dihapus"
+    }
+  }
+}

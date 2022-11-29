@@ -22,7 +22,13 @@ const AppRouteGuard = memo(({ children }: { children: JSX.Element }) => {
 
   // Check if user inside auth route and already authenticated
   if (isAuthRoute && auth_token) {
-    return <Navigate to='/back-office' state={{ from: location }} replace />
+    return (
+      <Navigate
+        to='/back-office/dashboard'
+        state={{ from: location }}
+        replace
+      />
+    )
   }
 
   if (!auth_token) {

@@ -1,0 +1,33 @@
+{
+  "company": {
+    "title": {
+      "show": "Company Detail",
+      "create": "Create Company",
+      "edit": "Edit Company"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "address": "Address",
+      "phone": "Phone",
+      "mobile": "Mobile"
+    },
+    "form": {
+      "name": "Name",
+      "address": "Address",
+      "phone": "Phone",
+      "mobile": "Mobile"
+    },
+    "formPlaceholder": {
+      "name": "Enter name",
+      "address": "Enter address",
+      "phone": "Enter phone",
+      "mobile": "Enter mobile"
+    },
+    "alert": {
+      "successCreated": "Company has been created",
+      "successUpdated": "Company has been updated",
+      "successDeleted": "Company has been deleted"
+    }
+  }
+}

@@ -16,6 +16,9 @@ import { IAppBaseInputProps } from '@/features/app/components/base/AppBaseInput/
 // Lodash
 import omit from 'lodash/omit'
 
+// Components
+import { AppBaseInputCurrency } from './components'
+
 const BLACKLIST_PROPS = [
   'backgroundColor',
   'height',
@@ -27,12 +30,10 @@ const BLACKLIST_PROPS = [
 const AppBaseInput = styled((props: IAppBaseInputProps) => (
   <Input {...omit(props, [...BLACKLIST_PROPS])} />
 ))`
-  &:not(.ant-input-status-error) {
-    border: none;
-  }
-
   background-color: ${props =>
-    props?.backgroundColor || APP_COLOR_LIGHT.BACKGROUND};
+    props?.backgroundColor
+      ? props.backgroundColor
+      : APP_COLOR_LIGHT.BACKGROUND} !important;
   height: ${props => (props?.height ? `${props.height}px` : '50px')};
   width: ${props => (props?.width ? `${props.width}px` : '100%')};
   border-radius: 10px;
@@ -41,7 +42,33 @@ const AppBaseInput = styled((props: IAppBaseInputProps) => (
 `
 
 const AppBaseInputSearch = styled((props: IAppBaseInputProps) => (
-  <Input.Search {...omit(props, [...BLACKLIST_PROPS])} />
+  <Input.Search
+    {...omit(
+      props,
+      [...BLACKLIST_PROPS].filter(list => list !== 'onSearch')
+    )}
+  />
 ))``
 
-export { AppBaseInput, AppBaseInputSearch }
+const AppBaseInputTextArea = styled(props => (
+  <Input.TextArea {...omit(props, [...BLACKLIST_PROPS])} />
+))`
+  &:not(.ant-input-status-error) {
+    border: none;
+  }
+
+  background-color: ${props =>
+    props?.backgroundColor || APP_COLOR_LIGHT.BACKGROUND} !important;
+  height: ${props => (props?.height ? `${props.height}px` : '50px')};
+  width: ${props => (props?.width ? `${props.width}px` : '100%')};
+  border-radius: 10px;
+  font-size: 14.22px;
+  color: ${APP_COLOR.DARK};
+`
+
+export {
+  AppBaseInput,
+  AppBaseInputSearch,
+  AppBaseInputTextArea,
+  AppBaseInputCurrency
+}

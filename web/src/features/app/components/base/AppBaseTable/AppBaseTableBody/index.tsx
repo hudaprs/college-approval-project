@@ -16,10 +16,10 @@ const AppBaseTableBody = styled((props: TableProps<any>) => (
     {...props}
     rowKey={props?.rowKey || 'id'}
     pagination={false}
-    scroll={{ x: 1024 }}
+    scroll={{ x: 1366 }}
   />
 ))`
-  margin: 30px 0px;
+  margin: 30px 0px 10px 0px;
   background: ${APP_COLOR_LIGHT.BACKGROUND} !important;
 
   .ant-table-content table {

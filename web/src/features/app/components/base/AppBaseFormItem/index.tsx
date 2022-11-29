@@ -10,9 +10,12 @@ import { APP_COLOR } from '@/features/app/constant/app-style.constant'
 // Interfaces
 import { IAppBaseFormItemProps } from './interfaces'
 
-const AppBaseFormItem = styled(Form.Item).attrs(
-  (props): IAppBaseFormItemProps => props
-)<IAppBaseFormItemProps>`
+// Lodash
+import omit from 'lodash/omit'
+
+const AppBaseFormItem = styled((props: IAppBaseFormItemProps) => (
+  <Form.Item {...omit(props, ['labelColor', 'labelSize'])} />
+))`
   .ant-form-item-label label {
     color: ${props => props?.labelColor || APP_COLOR.DARK};
     font-size: ${props => (props?.labelSize ? `${props.labelSize}px` : '16px')};

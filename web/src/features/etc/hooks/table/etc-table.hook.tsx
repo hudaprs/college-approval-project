@@ -22,6 +22,9 @@ import {
 // Store
 import { store } from '@/plugins'
 
+// Lodash
+import omit from 'lodash.omit'
+
 const useEtcTable = (props: TEtcTableInitial[]) => {
   // Hook
   const dispatch = useAppDispatch()
@@ -74,11 +77,10 @@ const useEtcTable = (props: TEtcTableInitial[]) => {
    */
   const etcTable_find = useCallback(
     (id: number): IEtcTableSliceTable | undefined => {
-      return store
-        .getState()
-        .etcTable.etcTable_list.find(table => table.id === id) as
-        | IEtcTableSliceTable
-        | undefined
+      return omit(
+        store.getState().etcTable.etcTable_list.find(table => table.id === id),
+        ['id']
+      ) as IEtcTableSliceTable | undefined
     },
     []
   )

@@ -2,15 +2,12 @@
 import { useCallback } from 'react'
 
 // Components
-import { StyledCredentialsContainer } from '@/features/auth/components'
 import {
   AppBaseButton,
   AppBaseDivider,
   AppBaseFormItem,
   AppBaseLabel,
-  AppBaseInput,
-  AppBaseCheckbox,
-  AppBaseSocialMediaButton
+  AppBaseInput
 } from '@/features/app/components'
 
 // i18n

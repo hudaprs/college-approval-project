@@ -12,5 +12,6 @@ export interface IAppBaseInputProps extends InputProps {
   height?: number
   width?: number
   loading?: boolean
-  onSearch: (value: string) => void
+  onSearch?: (value: string) => void
+  placeholder?: string
 }

@@ -14,15 +14,17 @@ import { useAppRouter } from '@/features/app/router/app.router'
 import { useAuthRouter } from '@/features/auth/router/auth.router'
 
 // Routes Back Office
-import { useTodoRouter } from '@/features/todo/router/todo.router'
 import { useDashboardRouter } from '@/features/dashboard/router/dashboard.router'
+import { useMasterRouter } from '@/features/master/router/master.router'
+import { useProjectManagementRouter } from '@/features/project-management/router/project-management.router'
 
 const useRouter = () => {
   // Router
   const app = useAppRouter()
   const auth = useAuthRouter()
-  const todo = useTodoRouter()
   const dashboard = useDashboardRouter()
+  const master = useMasterRouter()
+  const projectManagement = useProjectManagementRouter()
 
   const routes = useRoutes([
     ...app,
@@ -34,7 +36,7 @@ const useRouter = () => {
     {
       path: 'back-office',
       element: <AppLayoutBackOffice />,
-      children: [...dashboard, ...todo]
+      children: [...dashboard, ...master, ...projectManagement]
     },
     { path: '*', element: <AppNotFound /> }
   ])

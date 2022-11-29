@@ -19,11 +19,11 @@ import { AppBaseGlobalStyle } from '@/features/app/components'
 // i18n
 import '@/plugins/i18n'
 
-// Antd
-import 'antd/dist/reset.css'
-
 // Tailwind
 import '@/assets/styles/tailwind.css'
+
+// Antd
+import 'antd/dist/reset.css'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

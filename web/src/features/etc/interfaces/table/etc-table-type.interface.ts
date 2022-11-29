@@ -1,9 +1,9 @@
 export interface IEtcTablePagination {
-  pageNumber: number
+  page: number
   limit: number
   sort: 'asc' | 'desc'
-  column: string
-  search: string
+  column: string | undefined
+  search: string | undefined
 }
 
 export type TEtcTablePaginationType = 'limit' | 'search' | 'page' | 'reset'

@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\Master;
 
+use App\Helpers\Queries\Query;
 use App\Http\Resources\V1\Master\CompanyCollection;
 use App\Models\Company;
 use App\Traits\ResponseApi;
@@ -13,20 +14,20 @@ class CompanyService
 
     public function validate(Request $request)
     {
-
         $validation = [
             'name' => 'required|string|max:100',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:15|unique:companies,phone,' . $request->route('company'),
-            'mobile' => 'required|string|max:15|unique:companies,mobile,' . $request->route('company'),
+            'mobile' => 'string|max:15|unique:companies,mobile,' . $request->route('company'),
         ];
 
         $request->validate($validation);
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        return new CompanyCollection(Company::paginate(10));
+        $query = new Query(new Company(), $request);
+        return new CompanyCollection($query->paginate($request));
     }
 
     public function getDetail($id)
