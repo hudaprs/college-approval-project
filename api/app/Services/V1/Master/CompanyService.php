@@ -2,7 +2,7 @@
 
 namespace App\Services\V1\Master;
 
-use App\Helpers\Queries\Query;
+use App\Helpers\Queries\QueryHelper;
 use App\Http\Resources\V1\Master\CompanyCollection;
 use App\Models\Company;
 use App\Traits\ResponseApi;
@@ -26,8 +26,8 @@ class CompanyService
 
     public function getList(Request $request)
     {
-        $query = new Query(new Company(), $request);
-        return new CompanyCollection($query->paginate($request));
+        $query = new QueryHelper(new Company(), $request);
+        return new CompanyCollection($query->paginate());
     }
 
     public function getDetail($id)

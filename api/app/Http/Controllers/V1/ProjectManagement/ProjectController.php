@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\V1\Master;
+namespace App\Http\Controllers\V1\ProjectManagement;
 
 use App\Http\Controllers\Controller;
-use App\Services\V1\Master\ProjectService;
+use App\Services\V1\ProjectManagement\ProjectService;
+use App\Services\V1\ProjectTransaction\ProjectTransactionService;
 use App\Traits\ResponseApi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,11 +14,13 @@ class ProjectController extends Controller
 {
     use ResponseApi;
 
-    protected ProjectService $projectService;
+    private ProjectService $projectService;
+    private ProjectTransactionService $projectTransactionService;
 
-    function __construct(ProjectService $projectService)
+    function __construct(ProjectService $projectService, ProjectTransactionService $projectTransactionService)
     {
         $this->projectService = $projectService;
+        $this->projectTransactionService = $projectTransactionService;
         $this->middleware('auth:api');
     }
 
@@ -25,7 +29,7 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         return $this->success('Get company list success', $this->projectService->getList($request));
     }
@@ -36,17 +40,21 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->projectService->validate($request);
 
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->createUpdate($request);
+            $project = $this->projectService->createUpdate($request);
+            $projectTransaction = $this->projectTransactionService->create(['project' => $project]);
 
             DB::commit();
-            return $this->success('Project created successfully', $company, 201);
+            return $this->success('Project created successfully', [
+                'project' => $project,
+                'project_transaction' => $projectTransaction
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);
@@ -59,7 +67,7 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         try {
             return $this->success('Get project detail success', $this->projectService->getDetail($id));
@@ -75,7 +83,7 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $this->projectService->validate($request);
 
@@ -98,7 +106,7 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         try {
             DB::beginTransaction();

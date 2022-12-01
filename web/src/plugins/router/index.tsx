@@ -17,6 +17,7 @@ import { useAuthRouter } from '@/features/auth/router/auth.router'
 import { useDashboardRouter } from '@/features/dashboard/router/dashboard.router'
 import { useMasterRouter } from '@/features/master/router/master.router'
 import { useProjectManagementRouter } from '@/features/project-management/router/project-management.router'
+import { useProjectTransactionRouter } from '@/features/project-transaction/router/project-transaction.router'
 
 const useRouter = () => {
   // Router
@@ -25,6 +26,7 @@ const useRouter = () => {
   const dashboard = useDashboardRouter()
   const master = useMasterRouter()
   const projectManagement = useProjectManagementRouter()
+  const projectTransaction = useProjectTransactionRouter()
 
   const routes = useRoutes([
     ...app,
@@ -36,7 +38,12 @@ const useRouter = () => {
     {
       path: 'back-office',
       element: <AppLayoutBackOffice />,
-      children: [...dashboard, ...master, ...projectManagement]
+      children: [
+        ...dashboard,
+        ...master,
+        ...projectManagement,
+        ...projectTransaction
+      ]
     },
     { path: '*', element: <AppNotFound /> }
   ])

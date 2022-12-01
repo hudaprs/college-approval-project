@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\User;
-use App\Helpers\Constants\RoleConstant;
+use App\Constants\RoleConstant;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 

@@ -1,25 +1,18 @@
 <?php
 
-namespace App\Services\V1\Master;
+namespace App\Services\V1\ProjectManagement;
 
-use App\Helpers\Queries\Query;
-use App\Http\Resources\V1\Master\ProjectCollection;
+use App\Helpers\Auth\AuthHelper;
+use App\Constants\RoleConstant;
+use App\Helpers\Queries\QueryHelper;
+use App\Http\Resources\V1\ProjectManagement\ProjectCollection;
 use App\Models\Project;
-use App\Services\V1\Auth\AuthService;
 use App\Traits\ResponseApi;
-use App\Helpers\Constants\RoleConstant;
 use Illuminate\Http\Request;
 
 class ProjectService
 {
     use ResponseApi;
-
-    private AuthService $authService;
-
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
 
     public function validate(Request $request)
     {
@@ -35,15 +28,16 @@ class ProjectService
         $request->validate($validation);
     }
 
-    public function getList(Request $request)
+    public function getList(Request $request, $isPerUser = true)
     {
-        $query = new Query(new Project, $request);
+        $projectQuery = new QueryHelper(new Project, $request);
+        $projectQuery = $projectQuery->query()->with('project_transactions');
 
-        if ($this->authService->roleContain([RoleConstant::CLIENT])) {
-            $query = $query->where('user_id', $this->authService->currentUser()->id);
+        if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
+            $projectQuery = $projectQuery->query()->where('user_id', AuthHelper::currentUser()->id);
         }
 
-        return new ProjectCollection($query->paginate(10));
+        return new ProjectCollection($projectQuery->paginate());
     }
 
     public function getDetail($id)
@@ -61,9 +55,9 @@ class ProjectService
         $project->start_date = date('Y-m-d', strtotime($request->get('start_date')));
         $project->end_date = date('Y-m-d', strtotime($request->get('end_date')));
 
-        // Only insert in the first create / not edit
+        // Check if user creating this project
         if (!$id) {
-            $project->user_id = $this->authService->currentUser()->id;
+            $project->user_id = AuthHelper::currentUser()->id;
         }
 
         $project->save();

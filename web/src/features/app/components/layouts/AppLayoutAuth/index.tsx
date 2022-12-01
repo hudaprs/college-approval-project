@@ -1,5 +1,5 @@
 // React
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
 // Components
 import {
@@ -13,17 +13,21 @@ import { AppBaseLabel, AppRouteWrapper } from '@/features/app/components'
 // i18n
 import { useTranslation } from 'react-i18next'
 
-// Interfaces
-import { IAppLayoutAuthProps } from './interfaces'
-
 // Assets
 import AppImage from '@/assets/images/app.png'
 import LoginImage from '@/assets/images/auth/login.png'
 import RegisterImage from '@/assets/images/auth/register.png'
 
-const AppLayoutAuth = memo(({ isLogin }: IAppLayoutAuthProps) => {
+// React Router DOM
+import { useLocation } from 'react-router-dom'
+
+const AppLayoutAuth = memo(() => {
   // Hook
   const { t } = useTranslation()
+  const location = useLocation()
+  const isLoginPath = useMemo(() => {
+    return location.pathname.includes('login')
+  }, [location.pathname])
 
   return (
     <StyledWrapper>
@@ -37,7 +41,7 @@ const AppLayoutAuth = memo(({ isLogin }: IAppLayoutAuthProps) => {
             <img src={AppImage} alt='App' width={'90px'} height={'55.5px'} />
 
             <AppBaseLabel isBold fontSize={26}>
-              {t(`auth.${isLogin ? 'login' : 'register'}`)}
+              {t(`auth.${isLoginPath ? 'login' : 'register'}`)}
             </AppBaseLabel>
           </div>
 
@@ -48,7 +52,7 @@ const AppLayoutAuth = memo(({ isLogin }: IAppLayoutAuthProps) => {
         {/* Banner - Right Side */}
         <StyledBanner data-testid='auth-layout-right-side'>
           <img
-            src={isLogin ? LoginImage : RegisterImage}
+            src={isLoginPath ? LoginImage : RegisterImage}
             alt='App'
             width={'647px'}
             height={'602px'}

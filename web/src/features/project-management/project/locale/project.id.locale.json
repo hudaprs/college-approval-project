@@ -12,7 +12,8 @@
       "documents": "Dokumen",
       "description": "Deskripsi",
       "startDate": "Tanggal Mulai",
-      "endDate": "Tanggal Selesai"
+      "endDate": "Tanggal Selesai",
+      "transactions": "Transaksi"
     },
     "form": {
       "name": "Nama",

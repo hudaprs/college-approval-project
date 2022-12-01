@@ -2,24 +2,15 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\V1\Auth\AuthService;
+use App\Helpers\Auth\AuthHelper;
 use App\Traits\ResponseApi;
 use Closure;
-use App\Helpers\Constants\RoleConstant;
+use App\Constants\RoleConstant;
 use Illuminate\Http\Request;
 
 class EnsureFullyAuthenticated
 {
     use ResponseApi;
-
-    private AuthService $authService;
-    private RoleConstant $roleConstant;
-
-    function __construct(AuthService $authService, RoleConstant $roleConstant)
-    {
-        $this->authService = $authService;
-        $this->roleConstant = $roleConstant;
-    }
 
     /**
      * Handle an incoming request.
@@ -29,16 +20,16 @@ class EnsureFullyAuthenticated
      */
     public function handle(Request $request, Closure $next)
     {
-        $authenticatedUser = $this->authService->currentUser();
+        $authenticatedUser = AuthHelper::currentUser();
 
         // Check if user not completed the profile
-        if ($authenticatedUser->role === $this->roleConstant::CLIENT && !$this->authService->currentUser()->phone_number || !$this->authService->currentUser()->company_id) {
+        if ($authenticatedUser->role === RoleConstant::CLIENT && !AuthHelper::currentUser()->phone_number || !AuthHelper::currentUser()->company_id) {
             return $this->error('Please complete your profile first!', 403);
         }
 
 
         // Check if user not admin and want to access to route that only admin can access
-        if ($authenticatedUser->role === $this->roleConstant::CLIENT && str_contains($request->path(), "master")) {
+        if ($authenticatedUser->role === RoleConstant::CLIENT && str_contains($request->path(), "master")) {
             return $this->error("You don't have permission to access this route!", 403);
         }
 

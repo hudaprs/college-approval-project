@@ -1,0 +1,23 @@
+{
+  "projectTransaction": {
+    "title": {
+      "show": "Project Transaction Detail",
+      "handle": "Handle Project Transaction"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "budget": "Budget",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "users": "Users"
+    },
+    "form": {},
+    "formPlaceholder": {},
+    "alert": {
+      "successCreated": "Project has been created",
+      "successUpdated": "Project has been updated",
+      "successDeleted": "Project has been deleted"
+    }
+  }
+}

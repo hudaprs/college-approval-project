@@ -22,6 +22,7 @@
       "facebook": "Facebook"
     },
     "status": {
+      "status": "Status",
       "complete": "Selesai",
       "notComplete": "Tidak Selesai"
     },
@@ -29,6 +30,12 @@
       "createdAt": "Dibuat Pada",
       "updatedAt": "Diubah Pada",
       "action": "Aksi"
+    },
+    "form": {
+      "status": "Status"
+    },
+    "formPlaceholder": {
+      "status": "Pilih status"
     },
     "action": {
       "show": "Lihat",
@@ -62,7 +69,8 @@
       "projectManagement": {
         "projectManagement": "Manajemen Proyek",
         "project": "Proyek"
-      }
+      },
+      "projectTransaction": "Transaksi Proyek"
     },
     "pagination": {
       "total": "Total",

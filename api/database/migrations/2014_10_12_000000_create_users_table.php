@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 // Constant
-use App\Helpers\Constants\RoleConstant;
+use App\Constants\RoleConstant;
 
 return new class () extends Migration {
     /**
@@ -15,13 +15,11 @@ return new class () extends Migration {
      */
     public function up()
     {
-        $role = new RoleConstant();
-
-        Schema::create('users', function (Blueprint $table) use ($role) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id')->nullable();
             $table->string('name', 100);
-            $table->enum('role', $role->roleList)->default($role::CLIENT);
+            $table->enum('role', RoleConstant::ROLE_LIST())->default(RoleConstant::CLIENT);
             $table->string('email', 100)->unique();
             $table->string('password', 255);
             $table->string('phone_number', 15)->unique()->nullable();

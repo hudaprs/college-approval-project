@@ -20,6 +20,7 @@ import {
 // Antd
 import { MenuProps } from 'antd'
 import {
+  BarChartOutlined,
   DashboardOutlined,
   PartitionOutlined,
   ProjectOutlined
@@ -86,6 +87,12 @@ const AppLayoutBackOffice = memo(() => {
             onClick: () => navigate('/back-office/project-management/projects')
           }
         ]
+      },
+      {
+        key: '/back-office/project-transaction',
+        icon: <BarChartOutlined />,
+        label: t('app.menu.projectTransaction'),
+        onClick: () => navigate('/back-office/project-transaction')
       }
     ]
   }, [t, navigate])
@@ -121,7 +128,7 @@ const AppLayoutBackOffice = memo(() => {
       style={{ display: 'flex', overflowX: 'auto', minHeight: '100vh' }}
     >
       {/* Sidebar */}
-      <AppBaseLayoutSider collapsed={false}>
+      <AppBaseLayoutSider collapsed={false} width={250}>
         <div className='flex w-full flex-col justify-between'>
           <div style={{ minHeight: '90vh' }}>
             {/* Sidebar - Header */}

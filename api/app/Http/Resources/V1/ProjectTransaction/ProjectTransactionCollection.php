@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources\V1\Master;
+namespace App\Http\Resources\V1\ProjectTransaction;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ProjectCollection extends ResourceCollection
+class ProjectTransactionCollection extends ResourceCollection
 {
-
     /**
      * Transform the resource collection into an array.
      *

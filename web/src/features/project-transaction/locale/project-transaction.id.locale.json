@@ -1,0 +1,23 @@
+{
+  "project": {
+    "title": {
+      "show": "Detail Transaksi Proyek",
+      "handle": "Tangani Transaksi Proyek"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nama",
+      "budget": "Budget",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai",
+      "users": "User"
+    },
+    "form": {},
+    "formPlaceholder": {},
+    "alert": {
+      "successCreated": "Project has been created",
+      "successUpdated": "Project has been updated",
+      "successDeleted": "Project has been deleted"
+    }
+  }
+}

@@ -69,6 +69,16 @@ const Table = memo(
           key: 'end_date'
         },
         {
+          title: t('project.table.transactions'),
+          dataIndex: 'project_transactions',
+          key: 'project_transactions',
+          render: (_, record) => {
+            return `${record.project_transactions.length} ${t(
+              'project.table.transactions'
+            )}`
+          }
+        },
+        {
           title: t('app.table.createdAt'),
           dataIndex: 'created_at',
           key: 'created_at',

@@ -12,7 +12,8 @@
       "documents": "Documents",
       "description": "Description",
       "startDate": "Start Date",
-      "endDate": "End Date"
+      "endDate": "End Date",
+      "transactions": "Transactions"
     },
     "form": {
       "name": "Name",

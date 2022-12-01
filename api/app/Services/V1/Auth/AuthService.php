@@ -2,9 +2,10 @@
 
 namespace App\Services\V1\Auth;
 
+use App\Helpers\Auth\AuthHelper;
 use App\Models\User;
 use App\Traits\ResponseApi;
-use App\Helpers\Constants\RoleConstant;
+use App\Constants\RoleConstant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,23 +13,6 @@ use Illuminate\Support\Facades\Hash;
 class AuthService
 {
     use ResponseApi;
-
-    private RoleConstant $roleConstant;
-
-    function __construct(RoleConstant $roleConstant)
-    {
-        $this->roleConstant = $roleConstant;
-    }
-
-    public function roleContain($role)
-    {
-        return in_array(auth()->user()->role, $role);
-    }
-
-    public function currentUser()
-    {
-        return auth()->user()->load(['company', 'projects']);
-    }
 
     public function validate(Request $request, $isRegister = false): void
     {
@@ -73,6 +57,6 @@ class AuthService
 
     public function me()
     {
-        return $this->currentUser();
+        return AuthHelper::currentUser();
     }
 }

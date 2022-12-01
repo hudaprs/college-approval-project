@@ -22,6 +22,7 @@
       "facebook": "Facebook"
     },
     "status": {
+      "status": "Status",
       "complete": "Complete",
       "notComplete": "Not Complete"
     },
@@ -29,6 +30,12 @@
       "createdAt": "Created At",
       "updatedAt": "Updated At",
       "action": "Action"
+    },
+    "form": {
+      "status": "Status"
+    },
+    "formPlaceholder": {
+      "status": "Select status"
     },
     "action": {
       "show": "Show",
@@ -62,7 +69,8 @@
       "projectManagement": {
         "projectManagement": "Project Management",
         "project": "Project"
-      }
+      },
+      "projectTransaction": "Project Transaction"
     },
     "pagination": {
       "total": "Total",
