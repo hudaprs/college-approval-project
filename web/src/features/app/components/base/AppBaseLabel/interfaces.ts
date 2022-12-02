@@ -10,4 +10,6 @@ export interface IAppBaseLabelProps {
   isBold?: boolean
   fontColor?: APP_COLOR | APP_COLOR_LIGHT
   isLight?: boolean
+  marginTop?: number
+  marginBottom?: number
 }

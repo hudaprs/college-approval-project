@@ -27,6 +27,7 @@
       "notComplete": "Tidak Selesai"
     },
     "table": {
+      "createdBy": "Dibuat Oleh",
       "createdAt": "Dibuat Pada",
       "updatedAt": "Diubah Pada",
       "action": "Aksi"
@@ -43,7 +44,8 @@
       "submit": "Kirim",
       "cancel": "Batal",
       "update": "Perbaharui",
-      "delete": "Hapus"
+      "delete": "Hapus",
+      "handle": "Handle"
     },
     "confirmation": {
       "areYouSure": "Apakah Anda yakin?"

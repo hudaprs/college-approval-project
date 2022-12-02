@@ -19,16 +19,10 @@ import {
 export const AppBaseSelect = styled((props: IAppBaseSelectProps) => (
   <Select
     {...omit(props, ['backgroundColor', 'height', 'width'])}
-    style={{ height: 200 }}
+    filterOption={(input, option) =>
+      ((option?.label ?? '') as string)
+        .toLowerCase()
+        .includes(input.toLowerCase())
+    }
   />
-))`
-  height: ${props => (props?.height ? `${props.height}px` : '50px')} !important;
-  width: ${props => (props?.width ? `${props.width}px` : '100%')} !important;
-  background-color: ${props =>
-    props?.backgroundColor
-      ? props.backgroundColor
-      : APP_COLOR_LIGHT.BACKGROUND} !important;
-  border-radius: 10px;
-  font-size: 14.22px;
-  color: ${APP_COLOR.DARK};
-`
+))``

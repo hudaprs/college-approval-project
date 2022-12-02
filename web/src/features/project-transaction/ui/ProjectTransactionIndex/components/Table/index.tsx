@@ -6,8 +6,11 @@ import {
   AppBaseTableHeader,
   AppBaseTableBody,
   AppBaseTableFooter,
-  AppBaseDropdown
+  AppBaseDropdown,
+  AppBaseAvatar,
+  AppBaseTooltip
 } from '@/features/app/components'
+import { ProjectTransactionStatusTag } from '@/features/project-transaction/components'
 
 // Interfaces
 import { ITableProps } from './interfaces'
@@ -17,16 +20,29 @@ import { IProjectTransaction } from '@/features/project-transaction/interfaces/p
 import { useTranslation } from 'react-i18next'
 
 // Antd
+import { Avatar } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
-import { Avatar, Tooltip } from 'antd'
-import { AntDesignOutlined, UserOutlined } from '@ant-design/icons'
 
 // Utils
 import { currencyUtils_idr } from '@/features/app/utils/currency.utils'
 import { dateUtils_formatDate } from '@/features/app/utils/date.utils'
 
+// Constants
+import {
+  APP_COLOR,
+  APP_COLOR_LIGHT
+} from '@/features/app/constant/app-style.constant'
+
 const Table = memo(
-  ({ loading, fetching, data, onChange, onShow, onEdit }: ITableProps) => {
+  ({
+    loading,
+    fetching,
+    data,
+    isEditable,
+    onChange,
+    onShow,
+    onEdit
+  }: ITableProps) => {
     // Hook
     const { t } = useTranslation()
     const columns = useMemo((): ColumnsType<IProjectTransaction> => {
@@ -77,7 +93,10 @@ const Table = memo(
         {
           title: t('app.status.status'),
           dataIndex: 'status',
-          key: 'status'
+          key: 'status',
+          render: (_, record) => {
+            return <ProjectTransactionStatusTag status={record.status} />
+          }
         },
         {
           title: t('projectTransaction.table.users'),
@@ -90,27 +109,36 @@ const Table = memo(
                 maxPopoverTrigger='click'
                 size='large'
                 maxStyle={{
-                  color: '#f56a00',
-                  backgroundColor: '#fde3cf',
+                  color: APP_COLOR.WHITE,
+                  backgroundColor: APP_COLOR_LIGHT.PRIMARY,
                   cursor: 'pointer'
                 }}
               >
-                <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-                <Avatar style={{ backgroundColor: '#f56a00' }}>K</Avatar>
-                <Tooltip title='Ant User' placement='top'>
-                  <Avatar
-                    style={{ backgroundColor: '#87d068' }}
-                    icon={<UserOutlined />}
-                  />
-                </Tooltip>
-                <Avatar
-                  style={{ backgroundColor: '#1890ff' }}
-                  icon={<AntDesignOutlined />}
-                />
+                {record.users.map(user => (
+                  <AppBaseTooltip
+                    title={user.name}
+                    key={user.id}
+                    placement='top'
+                  >
+                    <AppBaseAvatar
+                      style={{ backgroundColor: APP_COLOR_LIGHT.PRIMARY }}
+                    >
+                      {user.name?.[0]}
+                    </AppBaseAvatar>
+                  </AppBaseTooltip>
+                ))}
               </Avatar.Group>
             ) : (
               '-'
             )
+          }
+        },
+        {
+          title: t('app.table.createdBy'),
+          dataIndex: 'created_by',
+          key: 'created_by',
+          render: (_, record) => {
+            return record.user.name
           }
         },
         {
@@ -134,26 +162,26 @@ const Table = memo(
           dataIndex: 'action',
           key: 'action',
           render: (_, record) => {
-            return (
-              <AppBaseDropdown
-                items={[
-                  {
-                    key: '1',
-                    label: t('app.action.show'),
-                    onClick: () => onShow(record.id)
-                  },
-                  {
-                    key: '2',
-                    label: t('app.action.edit'),
-                    onClick: () => onEdit(record.id)
-                  }
-                ]}
-              />
-            )
+            const items = [
+              {
+                key: '1',
+                label: t('app.action.show'),
+                onClick: () => onShow(record.id)
+              },
+              {
+                key: '2',
+                label: t('app.action.handle'),
+                onClick: () => onEdit(record.id)
+              }
+            ]
+
+            if (!isEditable(record.status)) items.splice(1, 1)
+
+            return <AppBaseDropdown items={items} />
           }
         }
       ]
-    }, [onEdit, onShow, t])
+    }, [onEdit, onShow, t, isEditable])
 
     return (
       <>

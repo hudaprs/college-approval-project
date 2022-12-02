@@ -38,6 +38,7 @@ class ProjectTransaction extends Model
         return $this
             ->belongsToMany(User::class, 'project_transaction_user', 'project_transaction_id')
             ->withPivot('reject_reason', 'approved_date', 'rejected_date')
-            ->as('approval');
+            ->as('approval')
+            ->withTimestamps();
     }
 }

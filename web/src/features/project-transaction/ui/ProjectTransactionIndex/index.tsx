@@ -21,6 +21,7 @@ import { Form } from 'antd'
 
 // Custom Hooks
 import { useEtcTable } from '@/features/etc/hooks/table/etc-table.hook'
+import { useAuth } from '@/features/auth/hooks/auth.hook'
 
 // Moment
 import moment from 'moment'
@@ -36,6 +37,7 @@ const ProjectTransactionIndex = memo(() => {
   const { etcTable_find, etcTable_onChange } = useEtcTable([{ id: 1 }])
   const [form] = Form.useForm()
   const { t } = useTranslation()
+  const { auth_authenticatedUserId } = useAuth()
   const {
     projectTransaction_fetchList,
     projectTransaction_fetchDetail,
@@ -55,23 +57,35 @@ const ProjectTransactionIndex = memo(() => {
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,
-    projectTransaction_userList
+    projectTransaction_userList,
+    projectTransaction_isEditable
   } = useProjectTransaction()
   const [modal, setModal] = useState<{ isCreateEditOpen: boolean }>({
     isCreateEditOpen: false
   })
-  const [isFormEditable, setIsFormEditable] = useState<boolean>(true)
+  const [isShowOnly, setIsShowOnly] = useState<boolean>(false)
+  const isFormEditable = useMemo(() => {
+    return (
+      !isShowOnly &&
+      projectTransaction_isEditable(projectTransaction_detail?.results?.status)
+    )
+  }, [
+    isShowOnly,
+    projectTransaction_isEditable,
+    projectTransaction_detail?.results?.status
+  ])
   const modalTitle = useMemo(() => {
     return t(
-      `project.title.${
+      `projectTransaction.title.${
         !isFormEditable
           ? 'show'
           : projectTransaction_detail?.results?.id
-          ? 'edit'
-          : 'create'
+          ? 'handle'
+          : ''
       }`
     )
   }, [isFormEditable, t, projectTransaction_detail?.results?.id])
+  const formStatus = Form.useWatch('status', form)
 
   useEffect(() => {
     const getProjectList = projectTransaction_fetchList({
@@ -90,6 +104,25 @@ const ProjectTransactionIndex = memo(() => {
       if (import.meta.env.PROD) getProjectList.abort()
     }
   }, [projectTransaction_fetchList, etcTable_find])
+
+  // Watch any change when status changed
+  useEffect(() => {
+    let getUserList: any
+
+    if (formStatus) {
+      // Check if user going to INTERNAL AGREEMENT PROCESS
+      if (
+        formStatus === PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS
+      ) {
+        getUserList = projectTransaction_fetchUserList()
+        getUserList.unwrap()
+      }
+    }
+
+    return () => {
+      if (import.meta.env.PROD && getUserList) getUserList.abort()
+    }
+  }, [formStatus, projectTransaction_fetchUserList])
 
   /**
    * @description Handle modal
@@ -118,8 +151,8 @@ const ProjectTransactionIndex = memo(() => {
         // Clear the form
         form.resetFields()
 
-        // Make form editable
-        setIsFormEditable(true)
+        // Reset only show
+        setIsShowOnly(false)
       }
     },
     [
@@ -158,34 +191,30 @@ const ProjectTransactionIndex = memo(() => {
    * @description Handle show edit
    *
    * @param {number} id
-   * @param {boolean} isReadable
+   * @param {boolean} isShowOnly
    *
    * @return {Promise<void>} Promise<void>
    */
   const handleShowEdit = useCallback(
-    async (id: number, isReadable?: boolean): Promise<void> => {
-      if (!isReadable) setIsFormEditable(false)
+    async (id: number, isShowOnly = false): Promise<void> => {
+      setIsShowOnly(isShowOnly)
 
       try {
         const response = await projectTransaction_fetchDetail({
           params: { id }
         }).unwrap()
 
-        // Check if status of transaction not approved / rejected
-        if (
-          ![
-            PROJECT_TRANSACTION_STATUS.REJECTED,
-            PROJECT_TRANSACTION_STATUS.APPROVED
-          ].includes(response.results.status)
-        ) {
-          projectTransaction_fetchStatusList()
-        }
+        await Promise.all([
+          projectTransaction_fetchStatusList(),
+          projectTransaction_fetchUserList()
+        ])
 
         // Set form value
         form.setFieldsValue({
           ...form.getFieldsValue(),
           ...pick(response.results, ['status']),
           ...response.results.active_project,
+          users: response.results.users.map(user => user.id),
           start_date: response.results.active_project
             ? moment(response.results.active_project.start_date)
             : undefined,
@@ -203,6 +232,7 @@ const ProjectTransactionIndex = memo(() => {
       handleModal,
       projectTransaction_fetchDetail,
       projectTransaction_fetchStatusList,
+      projectTransaction_fetchUserList,
       form
     ]
   )
@@ -271,13 +301,16 @@ const ProjectTransactionIndex = memo(() => {
         fetching={projectTransaction_isListFetching}
         data={projectTransaction_list?.results}
         onChange={onChangeTable}
-        onShow={id => handleShowEdit(id, false)}
-        onEdit={id => handleShowEdit(id, true)}
+        onShow={id => handleShowEdit(id, true)}
+        onEdit={handleShowEdit}
+        isEditable={projectTransaction_isEditable}
       />
 
       {/* Modal */}
       <Modal
         form={form}
+        projectTransaction={projectTransaction_detail?.results}
+        authenticatedUserId={auth_authenticatedUserId!}
         title={modalTitle}
         open={modal.isCreateEditOpen}
         onCancel={() => handleModal('isCreateEditOpen', false)}

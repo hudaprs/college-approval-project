@@ -44,7 +44,7 @@ class ProjectTransactionService
     public function getList(Request $request, $isPerUser = true)
     {
         $projectTransactionQuery = new QueryHelper(new ProjectTransaction, $request);
-        $projectTransactionQuery = $projectTransactionQuery->query()->with('users');
+        $projectTransactionQuery = $projectTransactionQuery->query()->with(['users', 'user']);
 
         if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
             $projectTransactionQuery = $projectTransactionQuery->query()->with([
@@ -62,7 +62,7 @@ class ProjectTransactionService
         $projectTransaction = new ProjectTransaction();
         $projectTransaction->project_id = $payload['project']['id'];
         $projectTransaction->created_by = AuthHelper::currentUser()->id;
-        $projectTransaction->active_project = json_encode($payload['project']);
+        $projectTransaction->active_project = $payload['project'];
         $projectTransaction->save();
 
         return $projectTransaction;

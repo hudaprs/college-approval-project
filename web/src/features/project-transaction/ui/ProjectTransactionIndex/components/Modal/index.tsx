@@ -1,15 +1,14 @@
 // React
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback } from 'react'
 
 // Components
 import {
+  AppBaseAvatar,
   AppBaseButton,
-  AppBaseDatePicker,
   AppBaseFormItem,
-  AppBaseInput,
-  AppBaseInputCurrency,
-  AppBaseInputTextArea,
+  AppBaseLabel,
   AppBaseModal,
+  appBaseModalConfirm,
   AppBaseSelect,
   AppBaseUpload
 } from '@/features/app/components'
@@ -21,83 +20,28 @@ import { IModalProps } from './interfaces'
 import { useTranslation } from 'react-i18next'
 
 // Antd
-import { Form, UploadProps, message } from 'antd'
-import { UploadOutlined } from '@ant-design/icons'
+import { Col, Form, List, message, Row } from 'antd'
 
-// Utils
-import {
-  fileUtils_convertBase64,
-  fileUtils_handleFileUpload,
-  fileUtils_normFile
-} from '@/features/app/utils/file.utils'
+// Constants
+import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
+import { currencyUtils_idr } from '@/features/app/utils/currency.utils'
+import { dateUtils_formatDate } from '@/features/app/utils/date.utils'
+import { ProjectTransactionStatusTag } from '@/features/project-transaction/components'
+import { APP_COLOR_LIGHT } from '@/features/app/constant/app-style.constant'
 
 const Modal = memo(
   ({
     onSubmit,
     form,
+    projectTransaction,
     isFormEditable,
+    authenticatedUserId,
     selectLoading,
     selectList,
     ...rest
   }: IModalProps) => {
     // Hook
     const { t } = useTranslation()
-    const [loading, setLoading] = useState<{ isConvertBase64Loading: boolean }>(
-      {
-        isConvertBase64Loading: false
-      }
-    )
-
-    /**
-     * @description Handle loading
-     *
-     * @param {'isConvertBase64Loading'} type
-     * @param {boolean} value
-     *
-     * @return {void} void
-     */
-    const handleLoading = useCallback(
-      (type: 'isConvertBase64Loading', value: boolean): void => {
-        setLoading(previousLoading => ({ ...previousLoading, [type]: value }))
-      },
-      []
-    )
-
-    /**
-     * @description Watch any change in file upload
-     *
-     * @param {string} uid
-     * @param {UploadProps['fileList']} fileList
-     *
-     * @return {Promise<void>} Promise<void>
-     */
-    const onChangeFiles = useCallback(
-      async (uid: string, fileList: UploadProps['fileList']): Promise<void> => {
-        handleLoading('isConvertBase64Loading', true)
-        try {
-          if (fileList) {
-            for (const file of fileList) {
-              if (file.uid === uid && file.originFileObj) {
-                const base64 = (await fileUtils_convertBase64(
-                  file.originFileObj
-                )) as string
-                file.url = base64
-              }
-            }
-          }
-
-          form.setFieldsValue({
-            ...form.getFieldsValue(),
-            documents: fileUtils_handleFileUpload(fileList)
-          })
-        } catch (err) {
-          if (err instanceof Error) message.error(err.message)
-        } finally {
-          handleLoading('isConvertBase64Loading', false)
-        }
-      },
-      [handleLoading, form]
-    )
 
     /**
      * @description Submit the form
@@ -105,117 +49,264 @@ const Modal = memo(
      * @return {Promise<void>} Promise<void>
      */
     const onOk = useCallback(async (): Promise<void> => {
-      handleLoading('isConvertBase64Loading', true)
       try {
         const response = await form.validateFields()
 
-        onSubmit(response)
+        appBaseModalConfirm({
+          title: t('projectTransaction.ask.submit'),
+          onOk() {
+            onSubmit(response)
+          },
+          onCancel() {
+            //
+          }
+        })
       } catch (err) {
         if (err instanceof Error) message.error(err.message)
-      } finally {
-        handleLoading('isConvertBase64Loading', false)
       }
-    }, [form, onSubmit, handleLoading])
+    }, [form, onSubmit, t])
 
     return (
       <AppBaseModal
         {...rest}
-        confirmLoading={rest.confirmLoading || loading.isConvertBase64Loading}
+        confirmLoading={
+          rest.confirmLoading ||
+          selectLoading.isStatusListLoading ||
+          selectLoading.isUserListLoading
+        }
         onOk={onOk}
+        width={1024}
         forceRender
       >
         <Form form={form} layout='vertical' requiredMark={false}>
-          {/* Name */}
-          <AppBaseFormItem name='name' label={t('project.form.name')}>
-            <AppBaseInput
-              placeholder={`${t('project.formPlaceholder.name')}`}
-              maxLength={100}
-              disabled
-            />
-          </AppBaseFormItem>
-
-          {/* Budget */}
-          <AppBaseFormItem
-            name='budget'
-            label={t('project.form.budget')}
-            trigger='onValueChange'
-          >
-            <AppBaseInputCurrency
-              prefix='Rp'
-              intlConfig={{ locale: 'id-ID', currency: 'IDR' }}
-              disabled
-              placeholder={`${t('project.formPlaceholder.budget')}`}
-            />
-          </AppBaseFormItem>
+          <Row gutter={24} className='mb-4'>
+            {/* Name */}
+            <Col span={12}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.name')}
+              </AppBaseLabel>
+              <AppBaseLabel fontSize={14}>
+                {projectTransaction
+                  ? projectTransaction.active_project.name
+                  : '-'}
+              </AppBaseLabel>
+            </Col>
+            {/* Budget */}
+            <Col span={12}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.budget')}
+              </AppBaseLabel>
+              <AppBaseLabel fontSize={14}>
+                {projectTransaction
+                  ? currencyUtils_idr(projectTransaction.active_project.budget)
+                  : '-'}
+              </AppBaseLabel>
+            </Col>
+          </Row>
 
           {/*  Documents */}
-          <AppBaseFormItem
-            name='documents'
-            label={t('project.form.documents')}
-            valuePropName='fileList'
-            getValueFromEvent={fileUtils_normFile}
-          >
-            <AppBaseUpload
-              beforeUpload={() => false}
-              onChange={event => onChangeFiles(event.file.uid, event.fileList)}
-              disabled
-              multiple
-            >
-              {isFormEditable && (
-                <AppBaseButton icon={<UploadOutlined />}>
-                  Upload Documents
-                </AppBaseButton>
+          <Row className='mb-4'>
+            <Col span={24}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.documents')}
+              </AppBaseLabel>
+              {projectTransaction?.active_project.documents && (
+                <AppBaseUpload
+                  fileList={projectTransaction?.active_project.documents}
+                  disabled
+                ></AppBaseUpload>
               )}
-            </AppBaseUpload>
-          </AppBaseFormItem>
+            </Col>
+          </Row>
 
           {/* Description */}
-          <AppBaseFormItem
-            name='description'
-            label={t('project.form.description')}
-          >
-            <AppBaseInputTextArea
-              placeholder={`${t('project.formPlaceholder.description')}`}
-              maxLength={255}
-              disabled
-            />
-          </AppBaseFormItem>
+          <Row className='mb-4'>
+            <Col span={24}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.description')}
+              </AppBaseLabel>
+              <AppBaseLabel fontSize={14}>
+                {projectTransaction
+                  ? projectTransaction.active_project.description
+                  : '-'}
+              </AppBaseLabel>
+            </Col>
+          </Row>
 
-          {/* Start Date */}
-          <AppBaseFormItem
-            name='start_date'
-            label={t('project.form.startDate')}
-          >
-            <AppBaseDatePicker
-              placeholder={`${t('project.formPlaceholder.startDate')}`}
-              disabled
-            />
-          </AppBaseFormItem>
-
-          {/* End Date */}
-          <AppBaseFormItem name='end_date' label={t('project.form.endDate')}>
-            <AppBaseDatePicker
-              placeholder={`${t('project.formPlaceholder.endDate')}`}
-              disabled
-            />
-          </AppBaseFormItem>
-
-          <hr />
+          <Row gutter={24} className='mb-4'>
+            {/* Start Date */}
+            <Col span={12}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.startDate')}
+              </AppBaseLabel>
+              <AppBaseLabel fontSize={14}>
+                {projectTransaction
+                  ? dateUtils_formatDate(
+                      projectTransaction.active_project.start_date,
+                      {
+                        noTime: true
+                      }
+                    )
+                  : '-'}
+              </AppBaseLabel>
+            </Col>
+            {/* End Date */}
+            <Col span={12}>
+              <AppBaseLabel fontSize={14} isBold>
+                {t('project.form.endDate')}
+              </AppBaseLabel>
+              <AppBaseLabel fontSize={14}>
+                {projectTransaction
+                  ? dateUtils_formatDate(
+                      projectTransaction.active_project.end_date,
+                      {
+                        noTime: true
+                      }
+                    )
+                  : '-'}
+              </AppBaseLabel>
+            </Col>
+          </Row>
 
           {/* Status */}
-          <AppBaseFormItem
-            name='status'
-            label={t('app.form.status')}
-            rules={[{ required: true }]}
-          >
-            <AppBaseSelect
-              placeholder={`${t('app.formPlaceholder.status')}`}
-              options={selectList.statusList.map(status => ({
-                label: status,
-                value: status
-              }))}
-            />
-          </AppBaseFormItem>
+          <Row className='mb-4'>
+            <Col span={24}>
+              <AppBaseLabel fontSize={14} isBold marginBottom={10}>
+                {t('app.form.status')}
+              </AppBaseLabel>
+
+              {isFormEditable ? (
+                <AppBaseFormItem
+                  name='status'
+                  label={t('app.form.status')}
+                  rules={[{ required: true }]}
+                  noStyle
+                >
+                  <AppBaseSelect
+                    placeholder={`${t('app.formPlaceholder.status')}`}
+                    options={selectList.statusList.map(status => ({
+                      label: status,
+                      value: status
+                    }))}
+                    disabled={!isFormEditable}
+                    loading={selectLoading.isStatusListLoading}
+                    style={{ width: '100%' }}
+                    showSearch
+                  />
+                </AppBaseFormItem>
+              ) : projectTransaction ? (
+                <ProjectTransactionStatusTag
+                  status={projectTransaction.status}
+                />
+              ) : (
+                <>-</>
+              )}
+            </Col>
+          </Row>
+
+          {/* Users */}
+          {(form.getFieldValue('status') ===
+            PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS ||
+            (form.getFieldValue('users') as number[])?.length > 0) && (
+            <Row>
+              <Col span={24}>
+                {isFormEditable ? (
+                  <AppBaseFormItem noStyle shouldUpdate>
+                    {({ getFieldValue }) => {
+                      return (
+                        <AppBaseFormItem
+                          name='users'
+                          label={t('projectTransaction.form.users')}
+                          rules={[{ required: true }]}
+                        >
+                          <AppBaseSelect
+                            placeholder={`${t(
+                              'projectTransaction.formPlaceholder.users'
+                            )}`}
+                            options={selectList.userList.map(user => ({
+                              label: user.name,
+                              value: user.id
+                            }))}
+                            disabled={
+                              !isFormEditable ||
+                              getFieldValue('status') !==
+                                PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS
+                            }
+                            loading={selectLoading.isUserListLoading}
+                            mode='multiple'
+                            style={{ width: '100%' }}
+                            showSearch
+                          />
+                        </AppBaseFormItem>
+                      )
+                    }}
+                  </AppBaseFormItem>
+                ) : (
+                  <List
+                    itemLayout='horizontal'
+                    dataSource={projectTransaction?.users || []}
+                    renderItem={user => {
+                      return (
+                        <>
+                          <AppBaseLabel fontSize={14} isBold marginBottom={10}>
+                            {t('projectTransaction.form.users')}
+                          </AppBaseLabel>
+
+                          <List.Item
+                            actions={
+                              user.id === authenticatedUserId
+                                ? [
+                                    <AppBaseButton
+                                      key='approve-button'
+                                      type='primary'
+                                    >
+                                      {t('projectTransaction.approval.approve')}
+                                    </AppBaseButton>,
+                                    <AppBaseButton
+                                      key='reject-button'
+                                      type='primary'
+                                      danger
+                                      block
+                                    >
+                                      {t('projectTransaction.approval.reject')}
+                                    </AppBaseButton>
+                                  ]
+                                : undefined
+                            }
+                          >
+                            <List.Item.Meta
+                              avatar={
+                                <AppBaseAvatar
+                                  style={{
+                                    backgroundColor: APP_COLOR_LIGHT.PRIMARY
+                                  }}
+                                >
+                                  {user.name?.[0]}
+                                </AppBaseAvatar>
+                              }
+                              title={
+                                <>
+                                  <AppBaseLabel fontSize={14} isBold>
+                                    {user.name} - {user.email}
+                                  </AppBaseLabel>
+                                </>
+                              }
+                              description={`${t(
+                                'projectTransaction.approval.assignedAt'
+                              )} ${dateUtils_formatDate(user.created_at)} `}
+                            />
+                            {user.approval.rejected_date && (
+                              <div>{user.approval.reject_reason}</div>
+                            )}
+                          </List.Item>
+                        </>
+                      )
+                    }}
+                  />
+                )}
+              </Col>
+            </Row>
+          )}
         </Form>
       </AppBaseModal>
     )

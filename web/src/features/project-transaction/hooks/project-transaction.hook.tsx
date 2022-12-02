@@ -1,3 +1,6 @@
+// React
+import { useCallback } from 'react'
+
 // Rtk
 import {
   useLazyProjectTransaction_fetchListQuery,
@@ -7,6 +10,12 @@ import {
   useProjectTransaction_assignUsersMutation,
   useProjectTransaction_updateStatusMutation
 } from '@/features/project-transaction/redux/project-transaction.rtk'
+
+// Constants
+import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
+
+// Interfaces
+import { IProjectTransactionResponseDetail } from '@/features/project-transaction/interfaces/project-transaction-response.interface'
 
 const useProjectTransaction = () => {
   // Fetch Project Transaction List
@@ -61,6 +70,21 @@ const useProjectTransaction = () => {
     { isLoading: projectTransaction_isUpdateStatusLoading }
   ] = useProjectTransaction_updateStatusMutation()
 
+  // Check if project transaction editable
+  const projectTransaction_isEditable = useCallback(
+    (status: PROJECT_TRANSACTION_STATUS | undefined): boolean => {
+      if (status) {
+        return ![
+          PROJECT_TRANSACTION_STATUS.REJECTED,
+          PROJECT_TRANSACTION_STATUS.APPROVED
+        ].includes(status)
+      }
+
+      return false
+    },
+    []
+  )
+
   return {
     // Rtk
     projectTransaction_fetchList,
@@ -82,7 +106,10 @@ const useProjectTransaction = () => {
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,
-    projectTransaction_userList
+    projectTransaction_userList,
+
+    // Hook
+    projectTransaction_isEditable
   }
 }
 

@@ -13,8 +13,20 @@ export interface IProjectTransaction {
   reject_reason: string
   approved_date: string
   rejected_date: string
-  active_project: IProject | null
-  users: IAuthAuthenticatedUser[]
+  active_project: IProject
+  user: IAuthAuthenticatedUser
+  users: ((IAuthAuthenticatedUser & {
+    created_at: string
+    updated_at: string
+  }) & {
+    approval: {
+      project_transaction_id: number
+      user_id: number
+      reject_reason: string
+      approved_date: string
+      rejected_date: string
+    }
+  })[]
   created_at: string
   updated_at: string
 }

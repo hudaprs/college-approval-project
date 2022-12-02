@@ -4,6 +4,9 @@ import styled from 'styled-components'
 // Antd
 import { Tag } from 'antd'
 
-const AppBaseTag = styled(Tag)``
+// Interfaces
+import { IAppBaseTagProps } from './interfaces'
+
+const AppBaseTag = styled((props: IAppBaseTagProps) => <Tag {...props} />)``
 
 export { AppBaseTag }

@@ -12,12 +12,27 @@
       "endDate": "End Date",
       "users": "Users"
     },
-    "form": {},
-    "formPlaceholder": {},
+    "form": {
+      "users": "Users"
+    },
+    "formPlaceholder": {
+      "users": "Select users"
+    },
     "alert": {
       "successCreated": "Project has been created",
       "successUpdated": "Project has been updated",
       "successDeleted": "Project has been deleted"
+    },
+    "approval": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "assignedAt": "Assigned At",
+      "noRejectReason": "No Reject Reason"
+    },
+    "ask": {
+      "approve": "Are you sure want to approve?",
+      "reject": "Are you sure want to reject?",
+      "submit": "Are you sure want to submit this action?"
     }
   }
 }

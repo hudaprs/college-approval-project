@@ -27,6 +27,7 @@
       "notComplete": "Not Complete"
     },
     "table": {
+      "createdBy": "Created By",
       "createdAt": "Created At",
       "updatedAt": "Updated At",
       "action": "Action"
@@ -43,7 +44,8 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "update": "Update",
-      "delete": "Delete"
+      "delete": "Delete",
+      "handle": "Handle"
     },
     "confirmation": {
       "areYouSure": "Are You sure?"
