@@ -23,13 +23,13 @@ class EnsureFullyAuthenticated
         $authenticatedUser = AuthHelper::currentUser();
 
         // Check if user not completed the profile
-        if ($authenticatedUser->role === RoleConstant::CLIENT && !AuthHelper::currentUser()->phone_number || !AuthHelper::currentUser()->company_id) {
+        if (!AuthHelper::isProfileCompleted()) {
             return $this->error('Please complete your profile first!', 403);
         }
 
 
         // Check if user not admin and want to access to route that only admin can access
-        if ($authenticatedUser->role === RoleConstant::CLIENT && str_contains($request->path(), "master")) {
+        if ($authenticatedUser->role === RoleConstant::CLIENT && in_array($request->path(), ["master", "user-management"])) {
             return $this->error("You don't have permission to access this route!", 403);
         }
 

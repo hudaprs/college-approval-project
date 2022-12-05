@@ -47,9 +47,9 @@ class ProjectTransactionService
         $projectTransactionQuery = $projectTransactionQuery->query()->with(['users', 'user']);
 
         if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
-            $projectTransactionQuery = $projectTransactionQuery->query()->with([
+            $projectTransactionQuery = $projectTransactionQuery->with([
                 'user' => function ($query) {
-                    $query->where('user.id', AuthHelper::currentUser()->id);
+                    $query->where('id', AuthHelper::currentUser()->id);
                 }
             ]);
         }
@@ -87,7 +87,7 @@ class ProjectTransactionService
         return $projectTransaction;
     }
 
-    public function getUserList()
+    public function getUnfilteredList()
     {
         return User::select('id', 'name', 'email', 'role')->whereIn('role', [RoleConstant::CEO, RoleConstant::CFO, RoleConstant::CTO])->get();
     }

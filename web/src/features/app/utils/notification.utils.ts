@@ -1,6 +1,6 @@
 // Antd
 import { notification } from 'antd'
-import type { NotificationPlacement } from 'antd/es/notification'
+import { NotificationPlacement } from 'antd/es/notification/interface'
 
 type TNotification = 'success' | 'info' | 'warning' | 'error'
 type TNotificationPayload = {

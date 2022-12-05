@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\Auth\AuthController as AuthControllerV1;
 use App\Http\Controllers\V1\Master\CompanyController as CompanyControllerV1;
+use App\Http\Controllers\V1\UserManagement\UserController as UserControllerV1;
 use App\Http\Controllers\V1\ProjectManagement\ProjectController as ProjectControllerV1;
 use App\Http\Controllers\V1\ProjectTransaction\ProjectTransactionController as ProjectTransactionControllerV1;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,9 @@ Route::prefix('v1')->group(function () {
             Route::post('refresh', 'refreshToken');
             Route::post('logout', 'logout');
             Route::get('me', 'me');
-            Route::get('company/dropdown', 'companyDropdown');
+            Route::get('check-profile', 'ensureProfileCompleted');
+            Route::get('companies', 'getCompanyList');
+            Route::patch('complete-profile', 'completeProfile');
         }
     );
 
@@ -38,6 +41,14 @@ Route::prefix('v1')->group(function () {
             Route::prefix('master')->group(
                 function () {
                     Route::resource('companies', CompanyControllerV1::class);
+                }
+            );
+
+
+            // User Management
+            Route::prefix('user-management')->group(
+                function () {
+                    Route::resource('users', UserControllerV1::class);
                 }
             );
 
@@ -52,11 +63,11 @@ Route::prefix('v1')->group(function () {
             Route::prefix('project-transaction')->group(
                 function () {
                     Route::get('/', [ProjectTransactionControllerV1::class, 'index']);
-                    Route::get('/{id}', [ProjectTransactionControllerV1::class, 'show']);
-                    Route::get('/status/list', [ProjectTransactionControllerV1::class, 'getStatusList']);
-                    Route::patch('/status/update/{id}', [ProjectTransactionControllerV1::class, 'updateStatus']);
-                    Route::get('/users/list', [ProjectTransactionControllerV1::class, 'getUserList']);
-                    Route::patch('/users/assign/{id}', [ProjectTransactionControllerV1::class, 'assignUsers']);
+                    Route::get('{id}', [ProjectTransactionControllerV1::class, 'show']);
+                    Route::get('status/list', [ProjectTransactionControllerV1::class, 'getStatusList']);
+                    Route::patch('status/update/{id}', [ProjectTransactionControllerV1::class, 'updateStatus']);
+                    Route::get('users', [ProjectTransactionControllerV1::class, 'getUserList']);
+                    Route::patch('users/assign/{id}', [ProjectTransactionControllerV1::class, 'assignUsers']);
                 }
             );
         }

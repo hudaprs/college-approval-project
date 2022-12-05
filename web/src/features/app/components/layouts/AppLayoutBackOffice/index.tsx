@@ -54,48 +54,52 @@ const AppLayoutBackOffice = memo(() => {
   const {
     auth_authenticatedUserName,
     auth_authenticatedUserRole,
+    auth_isProfileCompleted,
     auth_LOGOUT
   } = useAuth()
   const menuItems = useMemo((): MenuProps['items'] => {
-    return [
-      {
-        key: '/back-office/dashboard',
-        icon: <DashboardOutlined />,
-        label: t('app.menu.dashboard'),
-        onClick: () => navigate('/back-office/dashboard')
-      },
-      {
-        key: '/back-office/master',
-        icon: <PartitionOutlined />,
-        label: t('app.menu.master.master'),
-        children: [
+    return auth_isProfileCompleted
+      ? [
           {
-            key: '/back-office/master/companies',
-            label: t('app.menu.master.company'),
-            onClick: () => navigate('/back-office/master/companies')
+            key: '/back-office/dashboard',
+            icon: <DashboardOutlined />,
+            label: t('app.menu.dashboard'),
+            onClick: () => navigate('/back-office/dashboard')
+          },
+          {
+            key: '/back-office/master',
+            icon: <PartitionOutlined />,
+            label: t('app.menu.master.master'),
+            children: [
+              {
+                key: '/back-office/master/companies',
+                label: t('app.menu.master.company'),
+                onClick: () => navigate('/back-office/master/companies')
+              }
+            ]
+          },
+          {
+            key: '/back-office/project-management',
+            icon: <ProjectOutlined />,
+            label: t('app.menu.projectManagement.projectManagement'),
+            children: [
+              {
+                key: '/back-office/project-management/projects',
+                label: t('app.menu.projectManagement.project'),
+                onClick: () =>
+                  navigate('/back-office/project-management/projects')
+              }
+            ]
+          },
+          {
+            key: '/back-office/project-transaction',
+            icon: <BarChartOutlined />,
+            label: t('app.menu.projectTransaction'),
+            onClick: () => navigate('/back-office/project-transaction')
           }
         ]
-      },
-      {
-        key: '/back-office/project-management',
-        icon: <ProjectOutlined />,
-        label: t('app.menu.projectManagement.projectManagement'),
-        children: [
-          {
-            key: '/back-office/project-management/projects',
-            label: t('app.menu.projectManagement.project'),
-            onClick: () => navigate('/back-office/project-management/projects')
-          }
-        ]
-      },
-      {
-        key: '/back-office/project-transaction',
-        icon: <BarChartOutlined />,
-        label: t('app.menu.projectTransaction'),
-        onClick: () => navigate('/back-office/project-transaction')
-      }
-    ]
-  }, [t, navigate])
+      : []
+  }, [auth_isProfileCompleted, t, navigate])
   const selectedMenuItem = useMemo((): string | undefined => {
     return menuItems
       ?.find(menuItem => menuItem?.key?.toString()?.includes(location.pathname))

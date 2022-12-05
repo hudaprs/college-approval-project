@@ -134,7 +134,7 @@ const AuthRegister = () => {
               }
             ]}
           >
-            <AppBaseCheckbox>
+            <AppBaseCheckbox isCenter>
               <AppBaseLabel fontSize={16}>
                 {t('auth.privacy')}{' '}
                 <AppBaseLabel fontColor={APP_COLOR_LIGHT.PRIMARY} fontSize={16}>

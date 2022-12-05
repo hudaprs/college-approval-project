@@ -16,9 +16,10 @@ const auth = createSlice({
   reducers: {
     auth_SET_TOKEN: (
       state,
-      { payload: { token } }: PayloadAction<IAuthToken>
+      { payload: { token, refresh_token } }: PayloadAction<IAuthToken>
     ): void => {
       state.auth_token.token = token
+      state.auth_token.refresh_token = refresh_token
     },
     auth_SET_AUTHENTICATED_USER: (
       state,
@@ -26,8 +27,16 @@ const auth = createSlice({
     ): void => {
       state.auth_authenticatedUser = payload
     },
+    auth_SET_PROFILE_COMPLETED: (
+      state,
+      { payload }: PayloadAction<boolean>
+    ): void => {
+      state.auth_isProfileCompleted = payload
+    },
     auth_LOGOUT: state => {
       state.auth_token = AUTH_SLICE_INITIAL_STATE.auth_token
+      state.auth_isProfileCompleted =
+        AUTH_SLICE_INITIAL_STATE.auth_isProfileCompleted
       state.auth_authenticatedUser =
         AUTH_SLICE_INITIAL_STATE.auth_authenticatedUser
     }
@@ -35,7 +44,11 @@ const auth = createSlice({
 })
 
 // Mutations
-export const { auth_SET_TOKEN, auth_SET_AUTHENTICATED_USER, auth_LOGOUT } =
-  auth.actions
+export const {
+  auth_SET_TOKEN,
+  auth_SET_AUTHENTICATED_USER,
+  auth_SET_PROFILE_COMPLETED,
+  auth_LOGOUT
+} = auth.actions
 
 export default auth.reducer

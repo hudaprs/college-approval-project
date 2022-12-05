@@ -14,6 +14,21 @@
     "rememberAccount": "Apakah Anda ingat akun",
     "ask": {
       "logout": "Apakah anda yakin ingin logout?"
+    },
+    "warning": {
+      "profileComplete": "Dimohon untuk melengkapi data diri terlebih dahulu"
+    },
+    "title": {
+      "profileComplete": "Lengkapi Data Diri"
+    },
+    "form": {
+      "phoneNumber": "Nomor Telepon",
+      "company": "Perusahaan",
+      "companyNotExists": "Perusahaan tidak terdaftar?"
+    },
+    "formPlaceholder": {
+      "phoneNumber": "Masukkan nomor telepon",
+      "company": "Pilih perusahaan"
     }
   }
 }

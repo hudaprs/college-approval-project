@@ -3,7 +3,8 @@
     "title": {
       "show": "Detail Perusahaan",
       "create": "Tambah Perusahaan",
-      "edit": "Ubah Perusahaan"
+      "edit": "Ubah Perusahaan",
+      "data": "Data Perusahaan"
     },
     "table": {
       "id": "ID",

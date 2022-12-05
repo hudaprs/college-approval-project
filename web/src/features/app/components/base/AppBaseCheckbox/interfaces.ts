@@ -1,4 +1,6 @@
 // Antd
 import { CheckboxProps } from 'antd'
 
-export type IAppBaseCheckboxProps = CheckboxProps
+export interface IAppBaseCheckboxProps extends CheckboxProps {
+  isCenter?: boolean
+}

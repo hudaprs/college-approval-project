@@ -18,6 +18,7 @@ const AppBaseLabel = styled.p<IAppBaseLabelProps>`
     props?.fontWeight ? props.fontWeight : props?.isBold ? 700 : 400};
   color: ${props => (props?.fontColor ? props.fontColor : APP_COLOR.DARK)};
   opacity: ${props => (props?.isLight ? 0.5 : 1)};
+  display: inline-block;
 `
 
 export { AppBaseLabel }

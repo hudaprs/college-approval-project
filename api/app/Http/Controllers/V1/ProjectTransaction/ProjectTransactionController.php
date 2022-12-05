@@ -57,7 +57,7 @@ class ProjectTransactionController extends Controller
 
     public function getUserList()
     {
-        return $this->success('Get user list success', $this->projectTransactionService->getUserList());
+        return $this->success('Get user list success', $this->projectTransactionService->getUnfilteredList());
     }
 
     public function assignUsers(Request $request, $id)

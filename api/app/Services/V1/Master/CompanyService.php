@@ -15,10 +15,10 @@ class CompanyService
     public function validate(Request $request)
     {
         $validation = [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:companies,name,' . $request->route('company'),
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:15|unique:companies,phone,' . $request->route('company'),
-            'mobile' => 'string|max:15|unique:companies,mobile,' . $request->route('company'),
+            'mobile' => 'string|max:15'
         ];
 
         $request->validate($validation);
@@ -30,18 +30,23 @@ class CompanyService
         return new CompanyCollection($query->paginate());
     }
 
+    public function getUnfilteredList()
+    {
+        return Company::select('id', 'name')->orderBy('name', 'asc')->get();
+    }
+
     public function getDetail($id)
     {
         return Company::findOrFail($id);
     }
 
-    public function createUpdate(Request $request, $id = null)
+    public function createUpdate(mixed $payload, $id = null)
     {
         $company = $id ? $this->getDetail($id) : new Company();
-        $company->name = $request->get('name');
-        $company->address = $request->get('address');
-        $company->phone = $request->get('phone');
-        $company->mobile = $request->get('mobile');
+        $company->name = $payload['name'];
+        $company->address = $payload['address'];
+        $company->phone = $payload['phone'];
+        $company->mobile = $payload['mobile'];
         $company->save();
 
         return $company;

@@ -13,3 +13,8 @@ export interface ICompanyForm {
   phone: string
   mobile: string
 }
+
+export type ICompanyList = Omit<
+  ICompany,
+  'address' | 'mobile' | 'created_at' | 'updated_at'
+>

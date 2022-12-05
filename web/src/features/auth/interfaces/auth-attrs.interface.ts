@@ -1,3 +1,6 @@
+// Interfaces
+import { IAuthCompleteProfileForm } from './auth.interface'
+
 export interface IAuthAttrsLogin {
   body: {
     email: string
@@ -17,4 +20,8 @@ export interface IAuthAttrsResetPassword {
   body: {
     email: string
   }
+}
+
+export interface IAuthAttrsCompleteProfileForm {
+  body: IAuthCompleteProfileForm
 }

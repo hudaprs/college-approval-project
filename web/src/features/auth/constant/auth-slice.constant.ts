@@ -11,6 +11,8 @@ export const AUTH_SLICE_INITIAL_STATE: IAuthSliceInitialState = {
     phone_number: null
   },
   auth_token: {
-    token: null
-  }
+    token: null,
+    refresh_token: null
+  },
+  auth_isProfileCompleted: false
 }
