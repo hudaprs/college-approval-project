@@ -50,7 +50,12 @@ const ModalCompleteProfile = memo(
 
     return (
       <AppBaseModal {...rest} onOk={onOk} forceRender>
-        <Form form={form} layout='vertical' requiredMark={false}>
+        <Form
+          form={form}
+          layout='vertical'
+          initialValues={{ is_company_not_exists: false }}
+          requiredMark={false}
+        >
           {/* Phone Number */}
           <AppBaseFormItem
             name='phone_number'
@@ -84,11 +89,7 @@ const ModalCompleteProfile = memo(
           )}
 
           {/* Is Company Not Exists Checkbox */}
-          <AppBaseFormItem
-            name='is_company_not_exists'
-            rules={[{ required: true }]}
-            valuePropName='checked'
-          >
+          <AppBaseFormItem name='is_company_not_exists' valuePropName='checked'>
             <AppBaseCheckbox>{t('auth.form.companyNotExists')}</AppBaseCheckbox>
           </AppBaseFormItem>
 

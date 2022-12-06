@@ -27,9 +27,8 @@ class EnsureFullyAuthenticated
             return $this->error('Please complete your profile first!', 403);
         }
 
-
         // Check if user not admin and want to access to route that only admin can access
-        if ($authenticatedUser->role === RoleConstant::CLIENT && in_array($request->path(), ["master", "user-management"])) {
+        if ($authenticatedUser->role === RoleConstant::CLIENT && in_array(explode("/", $request->path())[2], ["master", "user-management"])) {
             return $this->error("You don't have permission to access this route!", 403);
         }
 

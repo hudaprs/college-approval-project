@@ -39,6 +39,9 @@ const AppEntryPoint = () => {
   const dispatch = useAppDispatch()
   const { app_locale } = useApp()
   const [isFirstTime, setIsFirstTime] = useState<boolean>(true)
+  const [modal, setModal] = useState<{ isNotCompleteOpen: boolean }>({
+    isNotCompleteOpen: false
+  })
   const {
     auth_getAuthenticatedUser,
     auth_profileCheck,
@@ -63,6 +66,21 @@ const AppEntryPoint = () => {
   }, [app_locale])
 
   /**
+   * @description Handle modal
+   *
+   * @param {string} type
+   * @param {boolean} value
+   *
+   * @return {void} void
+   */
+  const handleModal = useCallback(
+    (type: 'isNotCompleteOpen', value: boolean): void => {
+      setModal(previousModal => ({ ...previousModal, [type]: value }))
+    },
+    []
+  )
+
+  /**
    * @description Get authenticated user
    *
    * @return {Promise<void>} Promise<void>
@@ -83,7 +101,13 @@ const AppEntryPoint = () => {
         notificationUtils_open('warning', {
           message: i18n.t('auth.warning.profileComplete')
         })
+
+        handleModal('isNotCompleteOpen', true)
       }
+
+      // Check if profile completed
+      if (checkProfileResult.is_completed)
+        handleModal('isNotCompleteOpen', false)
 
       dispatch(auth_SET_AUTHENTICATED_USER(authenticatedUserResult))
       dispatch(auth_SET_PROFILE_COMPLETED(checkProfileResult.is_completed))
@@ -97,7 +121,8 @@ const AppEntryPoint = () => {
     auth_profileCheck,
     auth_SET_AUTHENTICATED_USER,
     auth_SET_PROFILE_COMPLETED,
-    dispatch
+    dispatch,
+    handleModal
   ])
 
   /**
@@ -110,15 +135,16 @@ const AppEntryPoint = () => {
   const onSubmit = useCallback(
     async (form: IAuthCompleteProfileForm): Promise<void> => {
       try {
-        const response = await auth_completeProfile({
+        const completeProfileResponse = await auth_completeProfile({
           body: form
         }).unwrap()
 
-        notificationUtils_open('success', {
-          message: response.message
-        })
-
+        // Re-fetch authenticated user
         getAuthenticatedUser()
+
+        notificationUtils_open('success', {
+          message: completeProfileResponse.message
+        })
       } catch (_) {
         //
       }
@@ -137,18 +163,20 @@ const AppEntryPoint = () => {
     if (!isFirstTime && !auth_isProfileCompleted) {
       auth_fetchCompanyList()
     }
-  }, [isFirstTime, auth_isProfileCompleted, auth_fetchCompanyList])
+
+    // eslint-disable-next-line
+  }, [isFirstTime, auth_fetchCompanyList])
 
   // Check if there any change in isCompanyNotExists
   useEffect(() => {
-    if (!isFirstTime && auth_isAuthenticated) {
+    if (!isFirstTime) {
       // Check if user choose company exists
-      if (!isCompanyNotExists) auth_fetchCompanyList()
+      if (!isCompanyNotExists && auth_isAuthenticated) auth_fetchCompanyList()
       else form.setFieldValue('company', undefined)
     }
 
     // eslint-disable-next-line
-  }, [isCompanyNotExists, auth_fetchCompanyList])
+  }, [isCompanyNotExists, auth_fetchCompanyList, auth_isAuthenticated])
 
   return (
     <AntdConfigProvider
@@ -163,11 +191,7 @@ const AppEntryPoint = () => {
         <ModalCompleteProfile
           form={form}
           title={i18n.t('auth.title.profileComplete')}
-          open={
-            !auth_isCompleteProfileLoading &&
-            !auth_isProfileCompleted &&
-            auth_isAuthenticated
-          }
+          open={modal.isNotCompleteOpen}
           confirmLoading={
             auth_isCompanyListLoading || auth_isCompleteProfileLoading
           }

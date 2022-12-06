@@ -45,6 +45,9 @@ import { useAuth } from '@/features/auth/hooks/auth.hook'
 import AppImage from '@/assets/images/app.png'
 import LogoutIcon from '@/assets/images/icon/logout.png'
 
+// Constants
+import { AUTH_ROLE } from '@/features/auth/constant/auth-role.constant'
+
 const AppLayoutBackOffice = memo(() => {
   // Hook
   const location = useLocation()
@@ -97,9 +100,16 @@ const AppLayoutBackOffice = memo(() => {
             label: t('app.menu.projectTransaction'),
             onClick: () => navigate('/back-office/project-transaction')
           }
-        ]
+        ].filter(item => {
+          const coreFeatureName = item.key.split('/')?.filter(key => key)?.[1]
+
+          return auth_authenticatedUserRole &&
+            [AUTH_ROLE.CLIENT].includes(auth_authenticatedUserRole)
+            ? !['master'].includes(coreFeatureName)
+            : item
+        })
       : []
-  }, [auth_isProfileCompleted, t, navigate])
+  }, [auth_isProfileCompleted, t, navigate, auth_authenticatedUserRole])
   const selectedMenuItem = useMemo((): string | undefined => {
     return menuItems
       ?.find(menuItem => menuItem?.key?.toString()?.includes(location.pathname))

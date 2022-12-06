@@ -129,7 +129,7 @@ const Table = memo(
           }
         }
       ]
-    }, [onDelete, onEdit, t])
+    }, [onDelete, onEdit, onShow, t])
 
     return (
       <>
