@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\ProjectManagement;
 
+use App\Constants\ProjectTransactionConstant;
 use App\Helpers\Auth\AuthHelper;
 use App\Constants\RoleConstant;
 use App\Helpers\Queries\QueryHelper;
@@ -31,7 +32,7 @@ class ProjectService
     public function getList(Request $request, $isPerUser = true)
     {
         $projectQuery = new QueryHelper(new Project, $request);
-        $projectQuery = $projectQuery->query()->with('project_transactions');
+        $projectQuery = $projectQuery->query()->with('user', 'project_transactions');
 
         if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
             $projectQuery = $projectQuery->where('user_id', AuthHelper::currentUser()->id);
@@ -40,20 +41,30 @@ class ProjectService
         return new ProjectCollection($projectQuery->paginate());
     }
 
-    public function getDetail($id)
+    public function getDetail($id, $isArray = false)
     {
-        return Project::findOrFail($id);
+        $project = Project::with('project_transactions')->findOrFail($id);
+
+        if ($isArray) {
+            return array_merge($project->toArray(), [
+                'active_project_transaction' => collect($project->project_transactions)
+                    ->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_ON_GOING())
+                    ->first()
+            ]);
+        } else {
+            return $project;
+        }
     }
 
-    public function createUpdate(Request $request, $id = null)
+    public function createUpdate(mixed $payload, $id = null)
     {
         $project = $id ? $this->getDetail($id) : new Project();
-        $project->name = $request->get('name');
-        $project->budget = $request->get('budget');
-        $project->documents = $request->get('documents');
-        $project->description = $request->get('description');
-        $project->start_date = date('Y-m-d', strtotime($request->get('start_date')));
-        $project->end_date = date('Y-m-d', strtotime($request->get('end_date')));
+        $project->name = $payload['name'];
+        $project->budget = $payload['budget'];
+        $project->documents = $payload['documents'];
+        $project->description = $payload['description'];
+        $project->start_date = date('Y-m-d', strtotime($payload['start_date']));
+        $project->end_date = date('Y-m-d', strtotime($payload['end_date']));
 
         // Check if user creating this project
         if (!$id) {

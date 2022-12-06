@@ -30,6 +30,7 @@ const Table = memo(
     loading,
     fetching,
     data,
+    authenticatedUserId,
     onChange,
     onCreate,
     onShow,
@@ -79,6 +80,14 @@ const Table = memo(
           }
         },
         {
+          title: t('app.table.createdBy'),
+          dataIndex: 'user',
+          key: 'user',
+          render: (_, record) => {
+            return record.user.name
+          }
+        },
+        {
           title: t('app.table.createdAt'),
           dataIndex: 'created_at',
           key: 'created_at',
@@ -123,13 +132,17 @@ const Table = memo(
                       </AppBasePopConfirm>
                     )
                   }
-                ]}
+                ].filter(item => {
+                  return record.user_id === authenticatedUserId
+                    ? item
+                    : ['1'].includes(item.key)
+                })}
               />
             )
           }
         }
       ]
-    }, [onDelete, onEdit, onShow, t])
+    }, [onDelete, onEdit, onShow, t, authenticatedUserId])
 
     return (
       <>

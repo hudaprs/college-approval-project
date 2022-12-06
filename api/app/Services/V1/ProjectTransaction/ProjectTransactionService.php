@@ -47,11 +47,9 @@ class ProjectTransactionService
         $projectTransactionQuery = $projectTransactionQuery->query()->with(['users', 'user']);
 
         if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
-            $projectTransactionQuery = $projectTransactionQuery->with([
-                'user' => function ($query) {
-                    $query->where('id', AuthHelper::currentUser()->id);
-                }
-            ]);
+            $projectTransactionQuery = $projectTransactionQuery->whereHas('user', function ($query) {
+                $query->where('id', AuthHelper::currentUser()->id);
+            });
         }
 
         return new ProjectTransactionCollection($projectTransactionQuery->paginate());
@@ -85,6 +83,14 @@ class ProjectTransactionService
         $projectTransaction->save();
 
         return $projectTransaction;
+    }
+
+    public function getNotProcessedTransaction($projectId)
+    {
+        // Get transaction that not processed yet, PENDING and Revise are status that not processed
+        // In that case, user can edit
+        return ProjectTransaction::where('project_id', $projectId)
+            ->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_NOT_PROCESSED())->first();
     }
 
     public function getUnfilteredList()

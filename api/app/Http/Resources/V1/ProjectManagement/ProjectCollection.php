@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1\ProjectManagement;
 
+use App\Constants\ProjectTransactionConstant;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProjectCollection extends ResourceCollection
@@ -16,7 +17,11 @@ class ProjectCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'list' => $this->collection,
+            'list' => $this->collection->map(function ($result) {
+                return array_merge($result->toArray(), [
+                    'active_project_transaction' => collect($result->project_transactions)->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_ON_GOING())->first()
+                ]);
+            }),
             'pagination' => [
                 'total' => $this->total(),
                 'count' => $this->count(),

@@ -24,4 +24,21 @@ class ProjectTransactionConstant
             self::REJECTED,
         ];
     }
+
+    public static function PROJECT_TRANSACTION_STATUS_ON_GOING()
+    {
+        return [
+            self::AGREEMENT_PROCESS,
+            self::REVISED,
+            self::INTERNAL_AGREEMENT_PROCESS,
+        ];
+    }
+
+    public static function PROJECT_TRANSACTION_STATUS_NOT_PROCESSED()
+    {
+        return [
+            self::PENDING,
+            self::REVISE,
+        ];
+    }
 }

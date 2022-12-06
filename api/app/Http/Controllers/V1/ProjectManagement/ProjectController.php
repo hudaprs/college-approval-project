@@ -47,7 +47,14 @@ class ProjectController extends Controller
         try {
             DB::beginTransaction();
 
-            $project = $this->projectService->createUpdate($request);
+            $project = $this->projectService->createUpdate([
+                'name' => $request->get('name'),
+                'budget' => $request->get('budget'),
+                'documents' => $request->get('documents'),
+                'description' => $request->get('description'),
+                'start_date' => $request->get('start_date'),
+                'end_date' => $request->get('end_date')
+            ]);
             $projectTransaction = $this->projectTransactionService->create(['project' => $project]);
 
             DB::commit();
@@ -70,7 +77,7 @@ class ProjectController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            return $this->success('Get project detail success', $this->projectService->getDetail($id));
+            return $this->success('Get project detail success', $this->projectService->getDetail($id, true));
         } catch (\Exception $e) {
             return $this->error($e);
         }
@@ -90,10 +97,24 @@ class ProjectController extends Controller
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->createUpdate($request, $id);
+            $project = $this->projectService->createUpdate([
+                'name' => $request->get('name'),
+                'budget' => $request->get('budget'),
+                'documents' => $request->get('documents'),
+                'description' => $request->get('description'),
+                'start_date' => $request->get('start_date'),
+                'end_date' => $request->get('end_date')
+            ], $id);
+
+            // Check if project
+            $onGoingProjectTransaction = $this->projectTransactionService->getNotProcessedTransaction($id);
+            if ($onGoingProjectTransaction) {
+                $onGoingProjectTransaction->active_project = $project;
+                $onGoingProjectTransaction->save();
+            }
 
             DB::commit();
-            return $this->success('Project updated successfully', $company);
+            return $this->success('Project updated successfully', $project);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);
@@ -111,10 +132,10 @@ class ProjectController extends Controller
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->delete($id);
+            $project = $this->projectService->delete($id);
 
             DB::commit();
-            return $this->success('Project deleted successfully', $company);
+            return $this->success('Project deleted successfully', $project);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);

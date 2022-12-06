@@ -2,6 +2,7 @@
 import { memo, useCallback, useState, useEffect, useMemo } from 'react'
 
 // Components
+import { appBaseModalConfirm } from '@/features/app/components'
 import { StyledWrapper, Table, Modal } from './components'
 
 // i18n
@@ -22,6 +23,7 @@ import { Form } from 'antd'
 // Custom Hooks
 import { useEtcTable } from '@/features/etc/hooks/table/etc-table.hook'
 import { useProject } from '@/features/project-management/project/hooks/project.hook'
+import { useAuth } from '@/features/auth/hooks/auth.hook'
 
 // Moment
 import moment from 'moment'
@@ -45,6 +47,7 @@ const ProjectIndex = memo(() => {
     project_delete,
     project_detail
   } = useProject()
+  const { auth_authenticatedUserId } = useAuth()
   const [modal, setModal] = useState<{ isCreateEditOpen: boolean }>({
     isCreateEditOpen: false
   })
@@ -201,37 +204,59 @@ const ProjectIndex = memo(() => {
    */
   const onSubmit = useCallback(
     async (form: IProjectForm): Promise<void> => {
-      try {
-        let response: IProjectResponseDetail
+      const projectId = project_detail?.results?.id
+      const activeProjectTransaction =
+        project_detail?.results?.active_project_transaction
 
-        if (project_detail?.results?.id) {
-          response = await project_update({
-            params: { id: project_detail.results.id },
-            body: form
-          }).unwrap()
-        } else {
-          response = await project_create({
-            body: form
-          }).unwrap()
+      appBaseModalConfirm({
+        title: t(
+          `project.ask.${
+            activeProjectTransaction
+              ? 'onGoingTransaction'
+              : projectId
+              ? 'edit'
+              : 'submit'
+          }`
+        ),
+        async onOk() {
+          try {
+            let response: IProjectResponseDetail
+
+            if (projectId) {
+              response = await project_update({
+                params: { id: projectId },
+                body: form
+              }).unwrap()
+            } else {
+              response = await project_create({
+                body: form
+              }).unwrap()
+            }
+
+            handleModal('isCreateEditOpen', false)
+
+            notificationUtils_open('success', {
+              message: response.message
+            })
+
+            onChangeTable('reset')
+          } catch (_) {
+            //
+          }
+        },
+        onCancel() {
+          //
         }
-
-        handleModal('isCreateEditOpen', false)
-
-        notificationUtils_open('success', {
-          message: response.message
-        })
-
-        onChangeTable('reset')
-      } catch (_) {
-        //
-      }
+      })
     },
     [
       project_create,
       project_update,
       handleModal,
+      project_detail?.results?.active_project_transaction,
       project_detail?.results?.id,
-      onChangeTable
+      onChangeTable,
+      t
     ]
   )
 
@@ -242,6 +267,7 @@ const ProjectIndex = memo(() => {
         loading={project_isListLoading}
         fetching={project_isListFetching}
         data={project_list?.results}
+        authenticatedUserId={auth_authenticatedUserId!}
         onChange={onChangeTable}
         onCreate={() => handleModal('isCreateEditOpen', true)}
         onShow={id => handleShowEdit(id, false)}

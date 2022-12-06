@@ -31,6 +31,7 @@ import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/const
 
 // Lodash
 import pick from 'lodash.pick'
+import { appBaseModalConfirm } from '@/features/app/components'
 
 const ProjectTransactionIndex = memo(() => {
   // Hook
