@@ -8,11 +8,16 @@ use App\Helpers\Auth\AuthHelper;
 use App\Helpers\Queries\QueryHelper;
 use App\Http\Resources\V1\ProjectTransaction\ProjectTransactionCollection;
 use App\Models\ProjectTransaction;
-use App\Models\User;
+use App\Traits\ResponseApi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class ProjectTransactionService
 {
+    use ResponseApi;
+
+
     public function validate(Request $request, mixed $type = "UPDATE_STATUS")
     {
         $validation = [];
@@ -26,6 +31,11 @@ class ProjectTransactionService
             case "ASSIGN_USERS":
                 $validation = [
                     'users' => 'required'
+                ];
+                break;
+            case "REJECT_REASON":
+                $validation = [
+                    'reject_reason' => 'required|max:255'
                 ];
                 break;
             default:
@@ -93,11 +103,6 @@ class ProjectTransactionService
             ->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_NOT_PROCESSED())->first();
     }
 
-    public function getUnfilteredList()
-    {
-        return User::select('id', 'name', 'email', 'role')->whereIn('role', [RoleConstant::CEO, RoleConstant::CFO, RoleConstant::CTO])->get();
-    }
-
     public function assignUsers(Request $request, $id)
     {
         $projectTransaction = $this->getDetail($id);
@@ -105,6 +110,46 @@ class ProjectTransactionService
         $projectTransaction->load(['users']);
 
         return $projectTransaction;
+    }
+
+    public function getAssignedUser($id)
+    {
+        $projectTransaction = $this->getDetail($id);
+
+        // Check if user that logged in are match with user that included to approve this project
+        $projectTransactionUser = $projectTransaction->users()->where('user_id', AuthHelper::currentUser()->id)->first();
+        if (!$projectTransactionUser) {
+            $error = ValidationException::withMessages(['You cannot process this approval!']);
+            throw $error;
+        }
+
+        return [
+            'project_transaction' => $projectTransaction,
+            'project_transaction_user' => $projectTransactionUser,
+        ];
+    }
+
+    public function userApprove($id)
+    {
+        $projectTransaction = $this->getAssignedUser($id);
+        $projectTransaction['project_transaction']->users()->syncWithoutDetaching([$projectTransaction['project_transaction_user']->id => ['approved_date' => Carbon::now()]]);
+        $projectTransaction['project_transaction']->load(['users']);
+
+        return $projectTransaction['project_transaction'];
+    }
+
+    public function userReject(mixed $payload, $id)
+    {
+        $projectTransactionUser = $this->getAssignedUser($id);
+        $projectTransactionUser['project_transaction']->users()->syncWithoutDetaching([
+                $projectTransactionUser['project_transaction_user']->id => [
+                'rejected_date' => Carbon::now(),
+                'reject_reason' => $payload['reject_reason']
+            ]
+        ]);
+        $projectTransactionUser['project_transaction']->load(['users']);
+
+        return $projectTransactionUser['project_transaction'];
     }
 
     public function update($id, $currentProject)

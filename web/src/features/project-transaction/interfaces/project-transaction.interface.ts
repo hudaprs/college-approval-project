@@ -35,3 +35,7 @@ export interface IProjectTransactionForm {
   status: PROJECT_TRANSACTION_STATUS
   users?: number[]
 }
+
+export interface IProjectTransactionUserRejectForm {
+  reject_reason: string
+}

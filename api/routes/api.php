@@ -62,12 +62,14 @@ Route::prefix('v1')->group(function () {
             // Project Transaction
             Route::prefix('project-transaction')->group(
                 function () {
-                    Route::get('/', [ProjectTransactionControllerV1::class, 'index']);
-                    Route::get('{id}', [ProjectTransactionControllerV1::class, 'show']);
                     Route::get('status/list', [ProjectTransactionControllerV1::class, 'getStatusList']);
                     Route::patch('status/update/{id}', [ProjectTransactionControllerV1::class, 'updateStatus']);
                     Route::get('users', [ProjectTransactionControllerV1::class, 'getUserList']);
                     Route::patch('users/assign/{id}', [ProjectTransactionControllerV1::class, 'assignUsers']);
+                    Route::patch('users/approve/{id}', [ProjectTransactionControllerV1::class, 'userApprove']);
+                    Route::patch('users/reject/{id}', [ProjectTransactionControllerV1::class, 'userReject']);
+                    Route::get('/', [ProjectTransactionControllerV1::class, 'index']);
+                    Route::get('/{id}', [ProjectTransactionControllerV1::class, 'show']);
                 }
             );
         }

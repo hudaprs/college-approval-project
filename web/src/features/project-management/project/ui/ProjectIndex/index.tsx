@@ -2,7 +2,7 @@
 import { memo, useCallback, useState, useEffect, useMemo } from 'react'
 
 // Components
-import { appBaseModalConfirm } from '@/features/app/components'
+import { AppBaseButton, appBaseModalConfirm } from '@/features/app/components'
 import { StyledWrapper, Table, Modal } from './components'
 
 // i18n
@@ -35,17 +35,17 @@ const ProjectIndex = memo(() => {
   const { t } = useTranslation()
   const {
     project_fetchList,
-    project_isListLoading,
-    project_isListFetching,
-    project_list,
     project_fetchDetail,
     project_resetDetail,
     project_create,
-    project_isCreateLoading,
     project_update,
-    project_isUpdateLoading,
     project_delete,
-    project_detail
+    project_list,
+    project_detail,
+    project_isListLoading,
+    project_isListFetching,
+    project_isCreateLoading,
+    project_isUpdateLoading
   } = useProject()
   const { auth_authenticatedUserId } = useAuth()
   const [modal, setModal] = useState<{ isCreateEditOpen: boolean }>({
@@ -199,11 +199,12 @@ const ProjectIndex = memo(() => {
    * @description Submit
    *
    * @param {IProjectForm} form
+   * @param {boolean} isReOrder
    *
    * @return {Promise<void>} Promise<void>
    */
   const onSubmit = useCallback(
-    async (form: IProjectForm): Promise<void> => {
+    async (form: IProjectForm, isReorder?: boolean): Promise<void> => {
       const projectId = project_detail?.results?.id
       const activeProjectTransaction =
         project_detail?.results?.active_project_transaction
@@ -213,6 +214,8 @@ const ProjectIndex = memo(() => {
           `project.ask.${
             activeProjectTransaction
               ? 'onGoingTransaction'
+              : isReorder
+              ? 'reorder'
               : projectId
               ? 'edit'
               : 'submit'
@@ -222,14 +225,14 @@ const ProjectIndex = memo(() => {
           try {
             let response: IProjectResponseDetail
 
-            if (projectId) {
+            if (projectId && !isReorder) {
               response = await project_update({
                 params: { id: projectId },
                 body: form
               }).unwrap()
             } else {
               response = await project_create({
-                body: form
+                body: isReorder ? { ...form, project_id: projectId } : form
               }).unwrap()
             }
 
@@ -278,6 +281,7 @@ const ProjectIndex = memo(() => {
       {/* Modal */}
       <Modal
         form={form}
+        project={project_detail?.results}
         title={modalTitle}
         open={modal.isCreateEditOpen}
         onCancel={() => handleModal('isCreateEditOpen', false)}

@@ -2,7 +2,8 @@
   "project": {
     "title": {
       "show": "Detail Transaksi Proyek",
-      "handle": "Tangani Transaksi Proyek"
+      "handle": "Tangani Transaksi Proyek",
+      "reject": "Tolak Proyek"
     },
     "table": {
       "id": "ID",
@@ -13,10 +14,12 @@
       "users": "User"
     },
     "form": {
-      "users": "Users"
+      "users": "Users",
+      "rejectReason": "Alasan Tolak"
     },
     "formPlaceholder": {
-      "users": "Pilih users"
+      "users": "Pilih users",
+      "rejectReason": "Masukan alasan penolakan"
     },
     "alert": {
       "successCreated": "Project has been created",
@@ -27,7 +30,9 @@
       "approve": "Setujui",
       "reject": "Tolak",
       "assignedAt": "Diassign pada",
-      "noReason": "Belum ada alasan penolakan"
+      "noReason": "Belum ada alasan penolakan",
+      "approvedAt": "Disetujui Pada",
+      "rejectedAt": "Ditolak Pada"
     },
     "ask": {
       "approve": "Apakah anda yakin ingin menyetujui data ini?",

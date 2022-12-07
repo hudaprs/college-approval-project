@@ -30,6 +30,6 @@ class Project extends Model
 
     public function project_transactions()
     {
-        return $this->hasMany(ProjectTransaction::class, 'project_id', 'id');
+        return $this->hasMany(ProjectTransaction::class, 'project_id', 'id')->with('users');
     }
 }

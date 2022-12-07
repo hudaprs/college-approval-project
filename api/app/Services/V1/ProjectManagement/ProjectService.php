@@ -29,10 +29,15 @@ class ProjectService
         $request->validate($validation);
     }
 
+    public function query()
+    {
+        return Project::query();
+    }
+
     public function getList(Request $request, $isPerUser = true)
     {
         $projectQuery = new QueryHelper(new Project, $request);
-        $projectQuery = $projectQuery->query()->with('user', 'project_transactions');
+        $projectQuery = $projectQuery->query()->with('user', 'project_transactions', 'project_transactions');
 
         if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
             $projectQuery = $projectQuery->where('user_id', AuthHelper::currentUser()->id);
@@ -41,19 +46,20 @@ class ProjectService
         return new ProjectCollection($projectQuery->paginate());
     }
 
-    public function getDetail($id, $isArray = false)
+    public function getDetail($id)
     {
-        $project = Project::with('project_transactions')->findOrFail($id);
+        return $this->query()->findOrFail($id);
+    }
 
-        if ($isArray) {
-            return array_merge($project->toArray(), [
-                'active_project_transaction' => collect($project->project_transactions)
-                    ->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_ON_GOING())
-                    ->first()
-            ]);
-        } else {
-            return $project;
-        }
+    public function getDetailMapped($id)
+    {
+        $project = $this->query()->with('project_transactions')->findOrFail($id);
+
+        return array_merge($project->toArray(), [
+            'active_project_transaction' => collect($project->project_transactions)
+                ->whereIn('status', ProjectTransactionConstant::PROJECT_TRANSACTION_STATUS_ON_GOING())
+                ->first()
+        ]);
     }
 
     public function createUpdate(mixed $payload, $id = null)

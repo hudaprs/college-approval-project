@@ -24,6 +24,7 @@ import { ColumnsType } from 'antd/lib/table'
 // Utils
 import { currencyUtils_idr } from '@/features/app/utils/currency.utils'
 import { dateUtils_formatDate } from '@/features/app/utils/date.utils'
+import { ProjectTransactionStatusTag } from '@/features/project-transaction/components'
 
 const Table = memo(
   ({
@@ -80,6 +81,20 @@ const Table = memo(
           }
         },
         {
+          title: t('app.status.status'),
+          dataIndex: 'status',
+          key: 'status',
+          render: (_, record) => {
+            return record.active_project_transaction ? (
+              <ProjectTransactionStatusTag
+                status={record.active_project_transaction?.status}
+              />
+            ) : (
+              <>-</>
+            )
+          }
+        },
+        {
           title: t('app.table.createdBy'),
           dataIndex: 'user',
           key: 'user',
@@ -133,7 +148,9 @@ const Table = memo(
                     )
                   }
                 ].filter(item => {
-                  return record.user_id === authenticatedUserId
+                  return record.active_project_transaction
+                    ? ['1'].includes(item.key)
+                    : record.user_id === authenticatedUserId
                     ? item
                     : ['1'].includes(item.key)
                 })}

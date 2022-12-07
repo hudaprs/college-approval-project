@@ -12,4 +12,5 @@ export interface IAppBaseLabelProps {
   isLight?: boolean
   marginTop?: number
   marginBottom?: number
+  inline?: boolean
 }

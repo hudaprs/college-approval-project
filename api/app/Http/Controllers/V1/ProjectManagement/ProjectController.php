@@ -47,14 +47,21 @@ class ProjectController extends Controller
         try {
             DB::beginTransaction();
 
-            $project = $this->projectService->createUpdate([
-                'name' => $request->get('name'),
-                'budget' => $request->get('budget'),
-                'documents' => $request->get('documents'),
-                'description' => $request->get('description'),
-                'start_date' => $request->get('start_date'),
-                'end_date' => $request->get('end_date')
-            ]);
+            $project = $this->projectService;
+
+            if (!$request->has('project_id')) {
+                $project = $project->createUpdate([
+                    'name' => $request->get('name'),
+                    'budget' => $request->get('budget'),
+                    'documents' => $request->get('documents'),
+                    'description' => $request->get('description'),
+                    'start_date' => $request->get('start_date'),
+                    'end_date' => $request->get('end_date')
+                ]);
+            } else {
+                $project = $project->getDetail($request->get('project_id'));
+            }
+
             $projectTransaction = $this->projectTransactionService->create(['project' => $project]);
 
             DB::commit();
@@ -77,7 +84,7 @@ class ProjectController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            return $this->success('Get project detail success', $this->projectService->getDetail($id, true));
+            return $this->success('Get project detail success', $this->projectService->getDetailMapped($id));
         } catch (\Exception $e) {
             return $this->error($e);
         }

@@ -32,12 +32,14 @@ import {
   APP_COLOR,
   APP_COLOR_LIGHT
 } from '@/features/app/constant/app-style.constant'
+import { AUTH_ROLE } from '@/features/auth/constant/auth-role.constant'
 
 const Table = memo(
   ({
     loading,
     fetching,
     data,
+    authenticatedUserRole,
     isEditable,
     onChange,
     onShow,
@@ -175,13 +177,17 @@ const Table = memo(
               }
             ]
 
-            if (!isEditable(record.status)) items.splice(1, 1)
+            if (
+              !isEditable(record.status) ||
+              ![AUTH_ROLE.MARKETING].includes(authenticatedUserRole)
+            )
+              items.splice(1, 1)
 
             return <AppBaseDropdown items={items} />
           }
         }
       ]
-    }, [onEdit, onShow, t, isEditable])
+    }, [onEdit, onShow, t, isEditable, authenticatedUserRole])
 
     return (
       <>

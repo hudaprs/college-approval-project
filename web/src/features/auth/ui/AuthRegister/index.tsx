@@ -135,13 +135,21 @@ const AuthRegister = () => {
             ]}
           >
             <AppBaseCheckbox isCenter>
-              <AppBaseLabel fontSize={16}>
+              <AppBaseLabel fontSize={16} inline>
                 {t('auth.privacy')}{' '}
-                <AppBaseLabel fontColor={APP_COLOR_LIGHT.PRIMARY} fontSize={16}>
+                <AppBaseLabel
+                  fontColor={APP_COLOR_LIGHT.PRIMARY}
+                  fontSize={16}
+                  inline
+                >
                   {t('auth.termsOfUse').toLowerCase()}{' '}
                 </AppBaseLabel>
                 {t('app.and').toLowerCase()} {t('app.our').toLowerCase()}{' '}
-                <AppBaseLabel fontColor={APP_COLOR_LIGHT.PRIMARY} fontSize={16}>
+                <AppBaseLabel
+                  fontColor={APP_COLOR_LIGHT.PRIMARY}
+                  fontSize={16}
+                  inline
+                >
                   {t('auth.policy').toLowerCase()}
                 </AppBaseLabel>
               </AppBaseLabel>

@@ -2,7 +2,8 @@
   "projectTransaction": {
     "title": {
       "show": "Project Transaction Detail",
-      "handle": "Handle Project Transaction"
+      "handle": "Handle Project Transaction",
+      "reject": "Reject Project"
     },
     "table": {
       "id": "ID",
@@ -13,10 +14,12 @@
       "users": "Users"
     },
     "form": {
-      "users": "Users"
+      "users": "Users",
+      "rejectReason": "Reject Reason"
     },
     "formPlaceholder": {
-      "users": "Select users"
+      "users": "Select users",
+      "rejectReason": "Enter reject reason"
     },
     "alert": {
       "successCreated": "Project has been created",
@@ -27,6 +30,8 @@
       "approve": "Approve",
       "reject": "Reject",
       "assignedAt": "Assigned At",
+      "approvedAt": "Approved At",
+      "rejectedAt": "Rejected At",
       "noRejectReason": "No Reject Reason"
     },
     "ask": {

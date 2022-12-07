@@ -8,6 +8,7 @@
     "our": "Our",
     "limit": "Limit",
     "logout": "Logout",
+    "reorder": "Reorder",
     "locale": {
       "en": "English",
       "id": "Indonesia"
@@ -51,7 +52,8 @@
       "areYouSure": "Are You sure?"
     },
     "alert": {
-      "logoutSuccess": "You Have Been Successfully Logout"
+      "logoutSuccess": "You Have Been Successfully Logout",
+      "waitingConfirmation": "Waiting Confirmation"
     },
     "error": {
       "error": "Error",

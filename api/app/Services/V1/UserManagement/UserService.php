@@ -2,6 +2,7 @@
 
 namespace App\Services\V1\UserManagement;
 
+use App\Constants\RoleConstant;
 use App\Helpers\Queries\QueryHelper;
 use App\Http\Resources\V1\UserManagement\UserCollection;
 use App\Models\User;
@@ -36,6 +37,11 @@ class UserService
     public function getDetail($id)
     {
         return User::findOrFail($id);
+    }
+
+    public function getCLevelUserList()
+    {
+        return User::whereIn('role', [RoleConstant::CEO, RoleConstant::CFO, RoleConstant::CTO])->get();
     }
 
     public function createUpdate(Request $request, $id = null)

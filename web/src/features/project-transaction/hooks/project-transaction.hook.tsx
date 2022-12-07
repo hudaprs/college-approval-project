@@ -8,14 +8,13 @@ import {
   useProjectTransaction_fetchStatusListMutation,
   useProjectTransaction_fetchUserListMutation,
   useProjectTransaction_assignUsersMutation,
-  useProjectTransaction_updateStatusMutation
+  useProjectTransaction_updateStatusMutation,
+  useProjectTransaction_userRejectMutation,
+  useProjectTransaction_userApproveMutation
 } from '@/features/project-transaction/redux/project-transaction.rtk'
 
 // Constants
 import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
-
-// Interfaces
-import { IProjectTransactionResponseDetail } from '@/features/project-transaction/interfaces/project-transaction-response.interface'
 
 const useProjectTransaction = () => {
   // Fetch Project Transaction List
@@ -70,6 +69,18 @@ const useProjectTransaction = () => {
     { isLoading: projectTransaction_isUpdateStatusLoading }
   ] = useProjectTransaction_updateStatusMutation()
 
+  // Project Transaction User Approve
+  const [
+    projectTransaction_userApprove,
+    { isLoading: projectTransaction_isUserApproveLoading }
+  ] = useProjectTransaction_userApproveMutation()
+
+  // Project Transaction User Reject
+  const [
+    projectTransaction_userReject,
+    { isLoading: projectTransaction_isUserRejectLoading }
+  ] = useProjectTransaction_userRejectMutation()
+
   // Check if project transaction editable
   const projectTransaction_isEditable = useCallback(
     (status: PROJECT_TRANSACTION_STATUS | undefined): boolean => {
@@ -96,6 +107,8 @@ const useProjectTransaction = () => {
     projectTransaction_updateStatus,
     projectTransaction_resetStatusList,
     projectTransaction_resetUserList,
+    projectTransaction_userApprove,
+    projectTransaction_userReject,
     projectTransaction_isListLoading,
     projectTransaction_isListFetching,
     projectTransaction_isStatusListLoading,
@@ -103,6 +116,8 @@ const useProjectTransaction = () => {
     projectTransaction_isAssignUsersLoading,
     projectTransaction_isUpdateStatusLoading,
     projectTransaction_isDetailLoading,
+    projectTransaction_isUserApproveLoading,
+    projectTransaction_isUserRejectLoading,
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,

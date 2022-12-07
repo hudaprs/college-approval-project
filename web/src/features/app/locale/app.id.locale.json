@@ -8,6 +8,7 @@
     "our": "Kami",
     "limit": "Limit",
     "logout": "Keluar",
+    "reorder": "Pesan Ulang",
     "locale": {
       "en": "English",
       "id": "Indonesia"
@@ -51,7 +52,8 @@
       "areYouSure": "Apakah Anda yakin?"
     },
     "alert": {
-      "logoutSuccess": "Anda Berhasil Logout"
+      "logoutSuccess": "Anda Berhasil Logout",
+      "waitingConfirmation": "Menunggu Konfirmasi"
     },
     "error": {
       "error": "Error",

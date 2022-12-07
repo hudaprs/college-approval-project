@@ -43,7 +43,7 @@ trait ResponseApi
         } else {
             return response()->json([
                 'message' => $this->renderMessage($response),
-                'stack' => method_exists($response, 'getTraceToString') ? $response?->getTraceToString() : null
+                'stack' => method_exists($response, 'getTraceToString') ? $response?->getTraceToString() : (method_exists($response, 'getTrace') ? $response->getTrace() : null)
             ], $statusCode);
         }
     }

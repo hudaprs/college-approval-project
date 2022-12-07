@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next'
 
 // Interfaces
 import { TEtcTablePaginationType } from '@/features/etc/interfaces/table/etc-table-type.interface'
-import { IProjectTransactionForm } from '@/features/project-transaction/interfaces/project-transaction.interface'
+import {
+  IProjectTransactionForm,
+  IProjectTransactionUserRejectForm
+} from '@/features/project-transaction/interfaces/project-transaction.interface'
 
 // Utils
 import { commonUtils_delay } from '@/features/app/utils/common.utils'
@@ -38,7 +41,7 @@ const ProjectTransactionIndex = memo(() => {
   const { etcTable_find, etcTable_onChange } = useEtcTable([{ id: 1 }])
   const [form] = Form.useForm()
   const { t } = useTranslation()
-  const { auth_authenticatedUserId } = useAuth()
+  const { auth_authenticatedUserId, auth_authenticatedUserRole } = useAuth()
   const {
     projectTransaction_fetchList,
     projectTransaction_fetchDetail,
@@ -49,12 +52,16 @@ const ProjectTransactionIndex = memo(() => {
     projectTransaction_resetDetail,
     projectTransaction_resetStatusList,
     projectTransaction_resetUserList,
+    projectTransaction_userApprove,
+    projectTransaction_userReject,
     projectTransaction_isListLoading,
     projectTransaction_isListFetching,
     projectTransaction_isUserListLoading,
     projectTransaction_isStatusListLoading,
     projectTransaction_isAssignUsersLoading,
     projectTransaction_isUpdateStatusLoading,
+    projectTransaction_isUserApproveLoading,
+    projectTransaction_isUserRejectLoading,
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,
@@ -205,10 +212,26 @@ const ProjectTransactionIndex = memo(() => {
           params: { id }
         }).unwrap()
 
-        await Promise.all([
-          projectTransaction_fetchStatusList(),
+        if (
+          !isShowOnly &&
+          [
+            PROJECT_TRANSACTION_STATUS.REVISED,
+            PROJECT_TRANSACTION_STATUS.AGREEMENT_PROCESS,
+            PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS,
+            PROJECT_TRANSACTION_STATUS.PENDING
+          ].includes(response.results.status)
+        ) {
+          projectTransaction_fetchStatusList()
+        }
+
+        if (
+          !isShowOnly &&
+          [PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS].includes(
+            response.results.status
+          )
+        ) {
           projectTransaction_fetchUserList()
-        ])
+        }
 
         // Set form value
         form.setFieldsValue({
@@ -235,6 +258,92 @@ const ProjectTransactionIndex = memo(() => {
       projectTransaction_fetchStatusList,
       projectTransaction_fetchUserList,
       form
+    ]
+  )
+
+  /**
+   * @description Handle when user approve project
+   *
+   * @return {Promise<void>} Promise<void>
+   */
+  const onUserApprove = useCallback(async (): Promise<void> => {
+    appBaseModalConfirm({
+      title: t('projectTransaction.ask.approve'),
+      async onOk() {
+        const projectTransactionId: number =
+          projectTransaction_detail!.results.id
+
+        try {
+          const userApproveResponse = await projectTransaction_userApprove({
+            params: { id: projectTransactionId }
+          }).unwrap()
+
+          // Re-fetch project transaction detail
+          await projectTransaction_fetchDetail({
+            params: { id: projectTransactionId }
+          }).unwrap()
+
+          notificationUtils_open('success', {
+            message: userApproveResponse.message
+          })
+        } catch (_) {
+          //
+        }
+      },
+      onCancel() {
+        //
+      }
+    })
+  }, [
+    t,
+    projectTransaction_userApprove,
+    projectTransaction_fetchDetail,
+    projectTransaction_detail
+  ])
+
+  /**
+   * @description Handle when user reject project
+   *
+   * @param {IProjectTransactionUserRejectForm} form
+   *
+   * @return {Promise<void>} Promise<void>
+   */
+  const onUserReject = useCallback(
+    async (form: IProjectTransactionUserRejectForm): Promise<void> => {
+      appBaseModalConfirm({
+        title: t('projectTransaction.ask.reject'),
+        async onOk() {
+          const projectTransactionId: number =
+            projectTransaction_detail!.results.id
+
+          try {
+            const userRejectResponse = await projectTransaction_userReject({
+              params: { id: projectTransactionId },
+              body: form
+            }).unwrap()
+
+            // Re-fetch project transaction detail
+            await projectTransaction_fetchDetail({
+              params: { id: projectTransactionId }
+            }).unwrap()
+
+            notificationUtils_open('success', {
+              message: userRejectResponse.message
+            })
+          } catch (_) {
+            //
+          }
+        },
+        onCancel() {
+          //
+        }
+      })
+    },
+    [
+      t,
+      projectTransaction_userReject,
+      projectTransaction_fetchDetail,
+      projectTransaction_detail
     ]
   )
 
@@ -301,6 +410,7 @@ const ProjectTransactionIndex = memo(() => {
         loading={projectTransaction_isListLoading}
         fetching={projectTransaction_isListFetching}
         data={projectTransaction_list?.results}
+        authenticatedUserRole={auth_authenticatedUserRole!}
         onChange={onChangeTable}
         onShow={id => handleShowEdit(id, true)}
         onEdit={handleShowEdit}
@@ -312,6 +422,7 @@ const ProjectTransactionIndex = memo(() => {
         form={form}
         projectTransaction={projectTransaction_detail?.results}
         authenticatedUserId={auth_authenticatedUserId!}
+        authenticatedUserRole={auth_authenticatedUserRole!}
         title={modalTitle}
         open={modal.isCreateEditOpen}
         onCancel={() => handleModal('isCreateEditOpen', false)}
@@ -325,10 +436,16 @@ const ProjectTransactionIndex = memo(() => {
           statusList: projectTransaction_statusList?.results || [],
           userList: projectTransaction_userList?.results || []
         }}
+        actionLoading={{
+          projectTransaction_isUserApproveLoading,
+          projectTransaction_isUserRejectLoading
+        }}
         selectLoading={{
           isStatusListLoading: projectTransaction_isStatusListLoading,
           isUserListLoading: projectTransaction_isUserListLoading
         }}
+        onUserApprove={onUserApprove}
+        onUserReject={onUserReject}
         onSubmit={onSubmit}
         isFormEditable={isFormEditable}
         footer={!isFormEditable ? null : undefined}

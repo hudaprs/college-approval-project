@@ -38,6 +38,7 @@
     "ask": {
       "submit": "Apakah anda yakin ingin mengirim data ini?",
       "edit": "Apakah anda yakgin ingin mengubah? Ini akan berdampak ke data transaksi!",
+      "reorder": "Apakah anda yakin ingin memesan ulang proyek ini?",
       "onGoingTransaction": "Apakah anda yakin ingin mengubah? Perubahan ini tidak akan berdampak ke transaksi yang sedang berlangsung!"
     }
   }

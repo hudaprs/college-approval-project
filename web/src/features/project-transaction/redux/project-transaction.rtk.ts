@@ -3,7 +3,9 @@ import {
   IProjectTransactionAttrsList,
   IProjectTransactionAttrsDetail,
   IProjectTransactionAttrsAssignUsers,
-  IProjectTransactionAttrsUpdateStatus
+  IProjectTransactionAttrsUpdateStatus,
+  IProjectTransactionAttrsUserApprove,
+  IProjectTransactionAttrsUserReject
 } from '@/features/project-transaction/interfaces/project-transaction-attrs.interface'
 import {
   IProjectTransactionResponseDetail,
@@ -45,7 +47,7 @@ export const projectTransactionApi = emptySplitApi.injectEndpoints({
       void
     >({
       query: () => ({
-        url: '/v1/project-transaction/users/list'
+        url: '/v1/project-transaction/users'
       })
     }),
     projectTransaction_assignUsers: builder.mutation<
@@ -67,6 +69,25 @@ export const projectTransactionApi = emptySplitApi.injectEndpoints({
         method: 'PATCH',
         body: payload.body
       })
+    }),
+    projectTransaction_userApprove: builder.mutation<
+      IProjectTransactionResponseDetail,
+      IProjectTransactionAttrsUserApprove
+    >({
+      query: payload => ({
+        url: `/v1/project-transaction/users/approve/${payload.params.id}`,
+        method: 'PATCH'
+      })
+    }),
+    projectTransaction_userReject: builder.mutation<
+      IProjectTransactionResponseDetail,
+      IProjectTransactionAttrsUserReject
+    >({
+      query: payload => ({
+        url: `/v1/project-transaction/users/reject/${payload.params.id}`,
+        method: 'PATCH',
+        body: payload.body
+      })
     })
   }),
   overrideExisting: false
@@ -78,5 +99,7 @@ export const {
   useProjectTransaction_fetchStatusListMutation,
   useProjectTransaction_fetchUserListMutation,
   useProjectTransaction_assignUsersMutation,
-  useProjectTransaction_updateStatusMutation
+  useProjectTransaction_updateStatusMutation,
+  useProjectTransaction_userApproveMutation,
+  useProjectTransaction_userRejectMutation
 } = projectTransactionApi
