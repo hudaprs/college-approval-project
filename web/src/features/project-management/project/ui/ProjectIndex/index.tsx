@@ -270,7 +270,6 @@ const ProjectIndex = memo(() => {
         loading={project_isListLoading}
         fetching={project_isListFetching}
         data={project_list?.results}
-        authenticatedUserId={auth_authenticatedUserId!}
         onChange={onChangeTable}
         onCreate={() => handleModal('isCreateEditOpen', true)}
         onShow={id => handleShowEdit(id, false)}

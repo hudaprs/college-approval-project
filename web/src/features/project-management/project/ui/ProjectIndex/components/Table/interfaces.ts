@@ -6,7 +6,6 @@ export interface ITableProps {
   data?: IProjectResponsePaginate['results']
   loading?: boolean
   fetching?: boolean
-  authenticatedUserId: number
   onChange: (inputType: TEtcTablePaginationType, value: string | number) => void
   onCreate: () => void
   onShow: (id: number) => void

@@ -1,9 +1,9 @@
 // Interfaces
 import { IEtcTablePagination } from '@/features/etc/interfaces/table/etc-table-type.interface'
-import { IProjectTransactionUserRejectForm } from './project-transaction.interface'
-
-// Constants
-import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
+import {
+  IProjectTransactionUserRejectForm,
+  IProjectTransactionForm
+} from './project-transaction.interface'
 
 export interface IProjectTransactionAttrsList {
   query?: IEtcTablePagination
@@ -22,7 +22,7 @@ export interface IProjectTransactionAttrsAssignUsers {
 
 export interface IProjectTransactionAttrsUpdateStatus {
   params: { id: number }
-  body: { status: PROJECT_TRANSACTION_STATUS }
+  body: IProjectTransactionForm
 }
 
 export interface IProjectTransactionAttrsUserApprove {
@@ -32,4 +32,8 @@ export interface IProjectTransactionAttrsUserApprove {
 export interface IProjectTransactionAttrsUserReject {
   params: { id: number }
   body: IProjectTransactionUserRejectForm
+}
+
+export interface IProjectTransactionAttrsUserResetDecision {
+  params: { id: number }
 }

@@ -68,6 +68,7 @@ Route::prefix('v1')->group(function () {
                     Route::patch('users/assign/{id}', [ProjectTransactionControllerV1::class, 'assignUsers']);
                     Route::patch('users/approve/{id}', [ProjectTransactionControllerV1::class, 'userApprove']);
                     Route::patch('users/reject/{id}', [ProjectTransactionControllerV1::class, 'userReject']);
+                    Route::patch('users/reset/{id}', [ProjectTransactionControllerV1::class, 'userResetDecision']);
                     Route::get('/', [ProjectTransactionControllerV1::class, 'index']);
                     Route::get('/{id}', [ProjectTransactionControllerV1::class, 'show']);
                 }

@@ -1,5 +1,6 @@
 {
   "projectTransaction": {
+    "resetDecision": "Reset Decision",
     "title": {
       "show": "Project Transaction Detail",
       "handle": "Handle Project Transaction",
@@ -24,7 +25,9 @@
     "alert": {
       "successCreated": "Project has been created",
       "successUpdated": "Project has been updated",
-      "successDeleted": "Project has been deleted"
+      "successDeleted": "Project has been deleted",
+      "ceoRejected": "CEO has been rejected this project, you can only reject this project transaction or contact the ceo to discuss",
+      "twoCLevelRejected": "More than two C-Level reject this project, you can only reject this project transaction or contact the C-Level to discuss"
     },
     "approval": {
       "approve": "Approve",
@@ -37,7 +40,8 @@
     "ask": {
       "approve": "Are you sure want to approve?",
       "reject": "Are you sure want to reject?",
-      "submit": "Are you sure want to submit this action?"
+      "submit": "Are you sure want to submit this action?",
+      "resetDecision": "Are you sure want to reset decision?"
     }
   }
 }

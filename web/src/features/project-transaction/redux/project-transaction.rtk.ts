@@ -5,7 +5,8 @@ import {
   IProjectTransactionAttrsAssignUsers,
   IProjectTransactionAttrsUpdateStatus,
   IProjectTransactionAttrsUserApprove,
-  IProjectTransactionAttrsUserReject
+  IProjectTransactionAttrsUserReject,
+  IProjectTransactionAttrsUserResetDecision
 } from '@/features/project-transaction/interfaces/project-transaction-attrs.interface'
 import {
   IProjectTransactionResponseDetail,
@@ -88,6 +89,15 @@ export const projectTransactionApi = emptySplitApi.injectEndpoints({
         method: 'PATCH',
         body: payload.body
       })
+    }),
+    projectTransaction_userResetDecision: builder.mutation<
+      IProjectTransactionResponseDetail,
+      IProjectTransactionAttrsUserResetDecision
+    >({
+      query: payload => ({
+        url: `/v1/project-transaction/users/reset/${payload.params.id}`,
+        method: 'PATCH'
+      })
     })
   }),
   overrideExisting: false
@@ -101,5 +111,6 @@ export const {
   useProjectTransaction_assignUsersMutation,
   useProjectTransaction_updateStatusMutation,
   useProjectTransaction_userApproveMutation,
-  useProjectTransaction_userRejectMutation
+  useProjectTransaction_userRejectMutation,
+  useProjectTransaction_userResetDecisionMutation
 } = projectTransactionApi

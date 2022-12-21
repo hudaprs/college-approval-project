@@ -111,4 +111,18 @@ class ProjectTransactionController extends Controller
             return $this->error($e);
         }
     }
+
+    public function userResetDecision($id)
+    {
+        DB::beginTransaction();
+        try {
+            $projectTransaction = $this->projectTransactionService->userResetDecision($id);
+
+            DB::commit();
+            return $this->success('You successfully reset your decision', $projectTransaction);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error($e);
+        }
+    }
 }

@@ -35,5 +35,6 @@ export interface IModalProps extends ModalProps {
   }
   onUserApprove: () => void
   onUserReject: (form: IProjectTransactionUserRejectForm) => void
+  onUserResetDecision: () => void
   onSubmit: (form: IProjectTransactionForm) => void
 }

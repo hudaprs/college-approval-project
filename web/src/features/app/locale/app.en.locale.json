@@ -34,9 +34,12 @@
       "action": "Action"
     },
     "form": {
+      "rejectReason": "Reject Reason",
+      "rejectedDate": "Rejected Date",
       "status": "Status"
     },
     "formPlaceholder": {
+      "rejectReason": "Enter reject reason",
       "status": "Select status"
     },
     "action": {

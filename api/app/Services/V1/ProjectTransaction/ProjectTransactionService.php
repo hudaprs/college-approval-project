@@ -90,7 +90,20 @@ class ProjectTransactionService
     {
         $projectTransaction = $this->getDetail($id);
         $projectTransaction->status = $request->get('status');
+
+        // Check if user input reject reason
+        if ($request->get('status') === ProjectTransactionConstant::REJECTED && $request->has('reject_reason')) {
+            $projectTransaction->reject_reason = $request->get('reject_reason');
+            $projectTransaction->rejected_date = Carbon::now();
+        }
+
+        // Check if user assigning users to project
+        if ($request->has('users') && count($request->get('users')) > 0) {
+            $projectTransaction->users()->sync($request->get('users'));
+        }
+
         $projectTransaction->save();
+        $projectTransaction->load(['users']);
 
         return $projectTransaction;
     }
@@ -138,6 +151,24 @@ class ProjectTransactionService
         return $projectTransaction['project_transaction'];
     }
 
+
+    public function userResetDecision($id)
+    {
+        $projectTransaction = $this->getAssignedUser($id);
+        $projectTransaction['project_transaction']
+            ->users()
+            ->syncWithoutDetaching([
+                    $projectTransaction['project_transaction_user']->id => [
+                    'approved_date' => null,
+                    'rejected_date' => null,
+                    'reject_reason' => null,
+                ]
+            ]);
+        $projectTransaction['project_transaction']->load(['users']);
+
+        return $projectTransaction['project_transaction'];
+    }
+
     public function userReject(mixed $payload, $id)
     {
         $projectTransactionUser = $this->getAssignedUser($id);
@@ -160,4 +191,5 @@ class ProjectTransactionService
 
         return $projectTransaction;
     }
+
 }

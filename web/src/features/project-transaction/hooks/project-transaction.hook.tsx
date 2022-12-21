@@ -10,7 +10,8 @@ import {
   useProjectTransaction_assignUsersMutation,
   useProjectTransaction_updateStatusMutation,
   useProjectTransaction_userRejectMutation,
-  useProjectTransaction_userApproveMutation
+  useProjectTransaction_userApproveMutation,
+  useProjectTransaction_userResetDecisionMutation
 } from '@/features/project-transaction/redux/project-transaction.rtk'
 
 // Constants
@@ -81,6 +82,12 @@ const useProjectTransaction = () => {
     { isLoading: projectTransaction_isUserRejectLoading }
   ] = useProjectTransaction_userRejectMutation()
 
+  // Project Transaction User Reset Decision
+  const [
+    projectTransaction_userResetDecision,
+    { isLoading: projectTransaction_isUserResetDecisionLoading }
+  ] = useProjectTransaction_userResetDecisionMutation()
+
   // Check if project transaction editable
   const projectTransaction_isEditable = useCallback(
     (status: PROJECT_TRANSACTION_STATUS | undefined): boolean => {
@@ -109,6 +116,7 @@ const useProjectTransaction = () => {
     projectTransaction_resetUserList,
     projectTransaction_userApprove,
     projectTransaction_userReject,
+    projectTransaction_userResetDecision,
     projectTransaction_isListLoading,
     projectTransaction_isListFetching,
     projectTransaction_isStatusListLoading,
@@ -118,6 +126,7 @@ const useProjectTransaction = () => {
     projectTransaction_isDetailLoading,
     projectTransaction_isUserApproveLoading,
     projectTransaction_isUserRejectLoading,
+    projectTransaction_isUserResetDecisionLoading,
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,

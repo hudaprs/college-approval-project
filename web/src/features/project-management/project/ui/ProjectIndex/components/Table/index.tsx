@@ -31,7 +31,6 @@ const Table = memo(
     loading,
     fetching,
     data,
-    authenticatedUserId,
     onChange,
     onCreate,
     onShow,
@@ -150,16 +149,14 @@ const Table = memo(
                 ].filter(item => {
                   return record.active_project_transaction
                     ? ['1'].includes(item.key)
-                    : record.user_id === authenticatedUserId
-                    ? item
-                    : ['1'].includes(item.key)
+                    : item
                 })}
               />
             )
           }
         }
       ]
-    }, [onDelete, onEdit, onShow, t, authenticatedUserId])
+    }, [onDelete, onEdit, onShow, t])
 
     return (
       <>

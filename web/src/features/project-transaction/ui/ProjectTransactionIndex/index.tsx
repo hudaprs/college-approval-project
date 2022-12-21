@@ -54,6 +54,7 @@ const ProjectTransactionIndex = memo(() => {
     projectTransaction_resetUserList,
     projectTransaction_userApprove,
     projectTransaction_userReject,
+    projectTransaction_userResetDecision,
     projectTransaction_isListLoading,
     projectTransaction_isListFetching,
     projectTransaction_isUserListLoading,
@@ -62,6 +63,7 @@ const ProjectTransactionIndex = memo(() => {
     projectTransaction_isUpdateStatusLoading,
     projectTransaction_isUserApproveLoading,
     projectTransaction_isUserRejectLoading,
+    projectTransaction_isUserResetDecisionLoading,
     projectTransaction_list,
     projectTransaction_detail,
     projectTransaction_statusList,
@@ -348,6 +350,47 @@ const ProjectTransactionIndex = memo(() => {
   )
 
   /**
+   * @description Handle when user reject project
+   *
+   * @return {Promise<void>} Promise<void>
+   */
+  const onUserResetDecision = useCallback(async (): Promise<void> => {
+    appBaseModalConfirm({
+      title: t('projectTransaction.ask.resetDecision'),
+      async onOk() {
+        const projectTransactionId: number =
+          projectTransaction_detail!.results.id
+
+        try {
+          const userResetDecisionResponse =
+            await projectTransaction_userResetDecision({
+              params: { id: projectTransactionId }
+            }).unwrap()
+
+          // Re-fetch project transaction detail
+          await projectTransaction_fetchDetail({
+            params: { id: projectTransactionId }
+          }).unwrap()
+
+          notificationUtils_open('success', {
+            message: userResetDecisionResponse.message
+          })
+        } catch (_) {
+          //
+        }
+      },
+      onCancel() {
+        //
+      }
+    })
+  }, [
+    t,
+    projectTransaction_userResetDecision,
+    projectTransaction_fetchDetail,
+    projectTransaction_detail
+  ])
+
+  /**
    * @description Submit
    *
    * @param {any} form
@@ -359,32 +402,35 @@ const ProjectTransactionIndex = memo(() => {
       try {
         if (projectTransaction_detail?.results?.id) {
           const params = { id: projectTransaction_detail.results.id }
+          let body: IProjectTransactionForm = {
+            status: form.status
+          }
+
+          // Check for status INTERNAL_AGREEMENT_PROCESS
+          if (
+            form.status ===
+              PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS &&
+            form.users
+          ) {
+            body = { ...body, users: form.users }
+          }
+
+          // Check for status REJECTED
+          if (
+            form.status === PROJECT_TRANSACTION_STATUS.REJECTED &&
+            form.reject_reason
+          ) {
+            body = { ...body, reject_reason: form.reject_reason }
+          }
 
           const updateStatusResponse = await projectTransaction_updateStatus({
             params,
-            body: { status: form.status }
+            body
           }).unwrap()
 
           notificationUtils_open('success', {
             message: updateStatusResponse.message
           })
-
-          // Check if user is assigning users
-          // Assigning users only came out in INTERNAL_AGREEMENT_PROCESS
-          if (
-            form.status ===
-              PROJECT_TRANSACTION_STATUS.INTERNAL_AGREEMENT_PROCESS &&
-            form?.users
-          ) {
-            const assignUsersResponse = await projectTransaction_assignUsers({
-              params,
-              body: { users: form.users }
-            }).unwrap()
-
-            notificationUtils_open('success', {
-              message: assignUsersResponse.message
-            })
-          }
 
           handleModal('isCreateEditOpen', false)
 
@@ -396,7 +442,6 @@ const ProjectTransactionIndex = memo(() => {
     },
     [
       projectTransaction_updateStatus,
-      projectTransaction_assignUsers,
       handleModal,
       projectTransaction_detail?.results?.id,
       onChangeTable
@@ -446,6 +491,7 @@ const ProjectTransactionIndex = memo(() => {
         }}
         onUserApprove={onUserApprove}
         onUserReject={onUserReject}
+        onUserResetDecision={onUserResetDecision}
         onSubmit={onSubmit}
         isFormEditable={isFormEditable}
         footer={!isFormEditable ? null : undefined}

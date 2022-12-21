@@ -1,5 +1,5 @@
 // React
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useState, useMemo } from 'react'
 
 // Components
 import {
@@ -7,6 +7,7 @@ import {
   AppBaseButton,
   AppBaseDivider,
   AppBaseFormItem,
+  AppBaseInputTextArea,
   AppBaseLabel,
   AppBaseModal,
   appBaseModalConfirm,
@@ -23,7 +24,7 @@ import { IModalProps } from './interfaces'
 import { useTranslation } from 'react-i18next'
 
 // Antd
-import { Col, Form, List, message, Row } from 'antd'
+import { Alert, Col, Form, List, message, Row } from 'antd'
 
 // Constants
 import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
@@ -48,6 +49,7 @@ const Modal = memo(
     actionLoading,
     onUserApprove,
     onUserReject,
+    onUserResetDecision,
     ...rest
   }: IModalProps) => {
     // Hook
@@ -56,6 +58,22 @@ const Modal = memo(
       isRejectOpen: false
     })
     const [rejectForm] = Form.useForm()
+    const isCeoRejected = useMemo((): boolean => {
+      return Boolean(
+        projectTransaction?.users.find(user => user.role === AUTH_ROLE.CEO)
+          ?.approval.rejected_date
+      )
+    }, [projectTransaction?.users])
+    const isMoreThanTwoCLevelRejected = useMemo((): boolean => {
+      if (projectTransaction?.users) {
+        return (
+          projectTransaction.users?.filter(user => user.approval.rejected_date)
+            ?.length > 1
+        )
+      } else {
+        return false
+      }
+    }, [projectTransaction?.users])
 
     /**
      * @description Handle modal
@@ -244,10 +262,17 @@ const Modal = memo(
                     >
                       <AppBaseSelect
                         placeholder={`${t('app.formPlaceholder.status')}`}
-                        options={selectList.statusList.map(status => ({
-                          label: status,
-                          value: status
-                        }))}
+                        options={selectList.statusList
+                          .map(status => ({
+                            label: status,
+                            value: status
+                          }))
+                          .filter(status =>
+                            isCeoRejected || isMoreThanTwoCLevelRejected
+                              ? status.value ===
+                                PROJECT_TRANSACTION_STATUS.REJECTED
+                              : status
+                          )}
                         disabled={!isFormEditable}
                         loading={selectLoading.isStatusListLoading}
                         style={{ width: '100%' }}
@@ -262,6 +287,68 @@ const Modal = memo(
                     <>-</>
                   )}
                 </Col>
+                {(isCeoRejected || isMoreThanTwoCLevelRejected) &&
+                  isFormEditable && (
+                    <Col span={24} className='pt-4'>
+                      <Alert
+                        type='warning'
+                        showIcon
+                        message={`${t(
+                          `projectTransaction.alert.${
+                            isMoreThanTwoCLevelRejected
+                              ? 'twoCLevelRejected'
+                              : 'ceoRejected'
+                          }`
+                        )}`}
+                      />
+                    </Col>
+                  )}
+              </Row>
+            )}
+
+            {/* Reject Reason */}
+            {[PROJECT_TRANSACTION_STATUS.REJECTED].includes(
+              form.getFieldValue('status')
+            ) && (
+              <Row>
+                <Col span={isFormEditable ? 24 : 12}>
+                  {isFormEditable ? (
+                    <AppBaseFormItem
+                      name='reject_reason'
+                      label={`${t('app.form.rejectReason')}`}
+                      rules={[{ required: true }]}
+                    >
+                      <AppBaseInputTextArea
+                        placeholder={`${t('app.formPlaceholder.rejectReason')}`}
+                      />
+                    </AppBaseFormItem>
+                  ) : projectTransaction ? (
+                    <>
+                      <AppBaseLabel fontSize={14} isBold marginBottom={10}>
+                        {t('app.form.rejectReason')}
+                      </AppBaseLabel>
+
+                      <AppBaseLabel fontSize={14}>
+                        {projectTransaction.reject_reason || '-'}
+                      </AppBaseLabel>
+                    </>
+                  ) : (
+                    <>-</>
+                  )}
+                </Col>
+                {!isFormEditable && (
+                  <Col span={12}>
+                    <AppBaseLabel fontSize={14} isBold marginBottom={10}>
+                      {t('app.form.rejectedDate')}
+                    </AppBaseLabel>
+
+                    <AppBaseLabel fontSize={14}>
+                      {projectTransaction
+                        ? dateUtils_formatDate(projectTransaction.rejected_date)
+                        : '-'}
+                    </AppBaseLabel>
+                  </Col>
+                )}
               </Row>
             )}
 
@@ -345,6 +432,21 @@ const Modal = memo(
                                           )}
                                         </AppBaseButton>
                                       ]
+                                    : user.id === authenticatedUserId &&
+                                      (user.approval.approved_date ||
+                                        user.approval.rejected_date)
+                                    ? [
+                                        <AppBaseButton
+                                          key='reset-decision-button'
+                                          type='primary'
+                                          onClick={onUserResetDecision}
+                                          danger
+                                        >
+                                          {t(
+                                            'projectTransaction.resetDecision'
+                                          )}
+                                        </AppBaseButton>
+                                      ]
                                     : undefined
                                 }
                               >
@@ -391,7 +493,14 @@ const Modal = memo(
                                   }`}
                                 />
                                 {user.approval.rejected_date && (
-                                  <div>{user.approval.reject_reason}</div>
+                                  <div className='flex flex-col'>
+                                    <AppBaseLabel isBold fontSize={14}>
+                                      Reject Reason:
+                                    </AppBaseLabel>
+                                    <AppBaseLabel fontSize={12}>
+                                      {user.approval.reject_reason}
+                                    </AppBaseLabel>
+                                  </div>
                                 )}
                               </List.Item>
                             </>

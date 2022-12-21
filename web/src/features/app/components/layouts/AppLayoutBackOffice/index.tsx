@@ -104,7 +104,13 @@ const AppLayoutBackOffice = memo(() => {
           const coreFeatureName = item.key.split('/')?.filter(key => key)?.[1]
 
           return auth_authenticatedUserRole &&
-            [AUTH_ROLE.CLIENT].includes(auth_authenticatedUserRole)
+            [
+              AUTH_ROLE.CLIENT,
+              AUTH_ROLE.CEO,
+              AUTH_ROLE.CFO,
+              AUTH_ROLE.CTO,
+              AUTH_ROLE.MARKETING
+            ].includes(auth_authenticatedUserRole)
             ? !['master'].includes(coreFeatureName)
             : item
         })

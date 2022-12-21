@@ -33,6 +33,7 @@ export interface IProjectTransaction {
 
 export interface IProjectTransactionForm {
   status: PROJECT_TRANSACTION_STATUS
+  reject_reason?: string
   users?: number[]
 }
 

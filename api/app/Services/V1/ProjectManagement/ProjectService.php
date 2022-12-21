@@ -38,10 +38,7 @@ class ProjectService
     {
         $projectQuery = new QueryHelper(new Project, $request);
         $projectQuery = $projectQuery->query()->with('user', 'project_transactions', 'project_transactions');
-
-        if ($isPerUser && AuthHelper::roleContain([RoleConstant::CLIENT])) {
-            $projectQuery = $projectQuery->where('user_id', AuthHelper::currentUser()->id);
-        }
+        $projectQuery = $projectQuery->where('user_id', AuthHelper::currentUser()->id);
 
         return new ProjectCollection($projectQuery->paginate());
     }

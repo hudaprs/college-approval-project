@@ -34,9 +34,11 @@
       "action": "Aksi"
     },
     "form": {
+      "rejectReason": "Alasan Penolakan",
       "status": "Status"
     },
     "formPlaceholder": {
+      "rejectReason": "Masukkan alasan penolakan",
       "status": "Pilih status"
     },
     "action": {
