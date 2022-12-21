@@ -8,7 +8,7 @@ import { RouteObject } from 'react-router-dom'
 import { AppLayoutDefault } from '@/features/app/components'
 
 // UI
-import { App } from '@/features/app/ui/App'
+const { App } = lazily(() => import('@/features/app/ui/App'))
 
 const useAppRouter = (): RouteObject[] => {
   return [

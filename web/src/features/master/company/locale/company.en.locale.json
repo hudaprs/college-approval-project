@@ -3,7 +3,8 @@
     "title": {
       "show": "Company Detail",
       "create": "Create Company",
-      "edit": "Edit Company"
+      "edit": "Edit Company",
+      "data": "Company Data"
     },
     "table": {
       "id": "ID",

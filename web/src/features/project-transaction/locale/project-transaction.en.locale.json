@@ -1,0 +1,47 @@
+{
+  "projectTransaction": {
+    "resetDecision": "Reset Decision",
+    "title": {
+      "show": "Project Transaction Detail",
+      "handle": "Handle Project Transaction",
+      "reject": "Reject Project"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "budget": "Budget",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "users": "Users"
+    },
+    "form": {
+      "users": "Users",
+      "rejectReason": "Reject Reason"
+    },
+    "formPlaceholder": {
+      "users": "Select users",
+      "rejectReason": "Enter reject reason"
+    },
+    "alert": {
+      "successCreated": "Project has been created",
+      "successUpdated": "Project has been updated",
+      "successDeleted": "Project has been deleted",
+      "ceoRejected": "CEO has been rejected this project, you can only reject this project transaction or contact the ceo to discuss",
+      "twoCLevelRejected": "More than two C-Level reject this project, you can only reject this project transaction or contact the C-Level to discuss"
+    },
+    "approval": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "assignedAt": "Assigned At",
+      "approvedAt": "Approved At",
+      "rejectedAt": "Rejected At",
+      "noRejectReason": "No Reject Reason"
+    },
+    "ask": {
+      "approve": "Are you sure want to approve?",
+      "reject": "Are you sure want to reject?",
+      "submit": "Are you sure want to submit this action?",
+      "resetDecision": "Are you sure want to reset decision?"
+    }
+  }
+}

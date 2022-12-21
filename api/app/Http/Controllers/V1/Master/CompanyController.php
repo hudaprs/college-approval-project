@@ -43,7 +43,12 @@ class CompanyController extends Controller
         try {
             DB::beginTransaction();
 
-            $company = $this->companyService->createUpdate($request);
+            $company = $this->companyService->createUpdate([
+                'name' => $request->get('name'),
+                'address' => $request->get('address'),
+                'phone' => $request->get('phone'),
+                'mobile' => $request->get('mobile'),
+            ]);
 
             DB::commit();
             return $this->success('Company created successfully', $company, 201);
@@ -82,7 +87,12 @@ class CompanyController extends Controller
         try {
             DB::beginTransaction();
 
-            $company = $this->companyService->createUpdate($request, $id);
+            $company = $this->companyService->createUpdate([
+                'name' => $request->get('name'),
+                'address' => $request->get('address'),
+                'phone' => $request->get('phone'),
+                'mobile' => $request->get('mobile'),
+            ], $id);
 
             DB::commit();
             return $this->success('Company updated successfully', $company);

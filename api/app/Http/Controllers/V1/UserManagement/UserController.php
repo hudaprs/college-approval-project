@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\V1\Master;
+namespace App\Http\Controllers\V1\UserManagement;
 
 use App\Http\Controllers\Controller;
-use App\Services\V1\Master\ProjectService;
+use App\Services\V1\UserManagement\UserService;
 use App\Traits\ResponseApi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ProjectController extends Controller
+class UserController extends Controller
 {
     use ResponseApi;
 
-    protected ProjectService $projectService;
+    private UserService $userService;
 
-    function __construct(ProjectService $projectService)
+    function __construct(UserService $userService)
     {
-        $this->projectService = $projectService;
+        $this->userService = $userService;
         $this->middleware('auth:api');
     }
 
@@ -25,9 +26,9 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        return $this->success('Get company list success', $this->projectService->getList($request));
+        return $this->success('Get user list success', $this->userService->getList($request));
     }
 
     /**
@@ -36,17 +37,17 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $this->projectService->validate($request);
+        $this->userService->validate($request);
 
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->createUpdate($request);
+            $user = $this->userService->createUpdate($request);
 
             DB::commit();
-            return $this->success('Project created successfully', $company, 201);
+            return $this->success('User created successfully', $user, 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);
@@ -59,10 +60,10 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         try {
-            return $this->success('Get project detail success', $this->projectService->getDetail($id));
+            return $this->success('Get user detail success', $this->userService->getDetail($id));
         } catch (\Exception $e) {
             return $this->error($e);
         }
@@ -75,17 +76,17 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
-        $this->projectService->validate($request);
+        $this->userService->validate($request);
 
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->createUpdate($request, $id);
+            $user = $this->userService->createUpdate($request, $id);
 
             DB::commit();
-            return $this->success('Project updated successfully', $company);
+            return $this->success('User updated successfully', $user);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);
@@ -98,15 +99,15 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         try {
             DB::beginTransaction();
 
-            $company = $this->projectService->delete($id);
+            $user = $this->userService->delete($id);
 
             DB::commit();
-            return $this->success('Project deleted successfully', $company);
+            return $this->success('User deleted successfully', $user);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error($e);

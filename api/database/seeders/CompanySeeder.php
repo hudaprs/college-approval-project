@@ -25,13 +25,13 @@ class CompanySeeder extends Seeder
             [
                 'name' => 'PT. Vodjo Teknologi Indonesia',
                 'address' => 'Graha Pos Indonesia, Lantai 2, Blok C Jl. Banda 30, Bandung 40115, Indonesia',
-                'phone' => '',
-                'mobile' => '+622220450422',
+                'phone' => '022-20450422',
+                'mobile' => '',
             ],
             [
                 'name' => 'PT. GITS Indonesia',
                 'address' => 'Jl. Mars Barat I No 9, Bandung 40286',
-                'phone' => '',
+                'phone' => '022-123123',
                 'mobile' => '08111309991',
             ]
         ]);

@@ -1,11 +1,15 @@
 // Interfaces
 import {
+  IAuthAttrsCompleteProfileForm,
   IAuthAttrsLogin,
   IAuthAttrsRegister
 } from '@/features/auth/interfaces/auth-attrs.interface'
 import {
   IAuthResponseToken,
-  IAuthResponseAuthenticatedUser
+  IAuthResponseAuthenticatedUser,
+  IAuthResponseCheckProfile,
+  IAuthResponseCompleteProfile,
+  IAuthResponseCompanyList
 } from '@/features/auth/interfaces/auth-response.interface'
 
 // Rtk
@@ -34,6 +38,26 @@ export const authApi = emptySplitApi.injectEndpoints({
       query: () => ({
         url: `/v1/auth/me`
       })
+    }),
+    auth_checkProfile: builder.query<IAuthResponseCheckProfile, void>({
+      query: () => ({
+        url: '/v1/auth/check-profile'
+      })
+    }),
+    auth_fetchCompanyList: builder.mutation<IAuthResponseCompanyList, void>({
+      query: () => ({
+        url: '/v1/auth/companies'
+      })
+    }),
+    auth_completeProfile: builder.mutation<
+      IAuthResponseCompleteProfile,
+      IAuthAttrsCompleteProfileForm
+    >({
+      query: ({ body }) => ({
+        url: '/v1/auth/complete-profile',
+        method: 'PATCH',
+        body
+      })
     })
   }),
   overrideExisting: false
@@ -42,5 +66,8 @@ export const authApi = emptySplitApi.injectEndpoints({
 export const {
   useAuth_registerMutation,
   useAuth_loginMutation,
-  useLazyAuth_meQuery
+  useLazyAuth_meQuery,
+  useLazyAuth_checkProfileQuery,
+  useAuth_fetchCompanyListMutation,
+  useAuth_completeProfileMutation
 } = authApi

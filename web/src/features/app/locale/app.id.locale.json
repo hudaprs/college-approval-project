@@ -8,6 +8,7 @@
     "our": "Kami",
     "limit": "Limit",
     "logout": "Keluar",
+    "reorder": "Pesan Ulang",
     "locale": {
       "en": "English",
       "id": "Indonesia"
@@ -22,13 +23,23 @@
       "facebook": "Facebook"
     },
     "status": {
+      "status": "Status",
       "complete": "Selesai",
       "notComplete": "Tidak Selesai"
     },
     "table": {
+      "createdBy": "Dibuat Oleh",
       "createdAt": "Dibuat Pada",
       "updatedAt": "Diubah Pada",
       "action": "Aksi"
+    },
+    "form": {
+      "rejectReason": "Alasan Penolakan",
+      "status": "Status"
+    },
+    "formPlaceholder": {
+      "rejectReason": "Masukkan alasan penolakan",
+      "status": "Pilih status"
     },
     "action": {
       "show": "Lihat",
@@ -36,13 +47,15 @@
       "submit": "Kirim",
       "cancel": "Batal",
       "update": "Perbaharui",
-      "delete": "Hapus"
+      "delete": "Hapus",
+      "handle": "Handle"
     },
     "confirmation": {
       "areYouSure": "Apakah Anda yakin?"
     },
     "alert": {
-      "logoutSuccess": "Anda Berhasil Logout"
+      "logoutSuccess": "Anda Berhasil Logout",
+      "waitingConfirmation": "Menunggu Konfirmasi"
     },
     "error": {
       "error": "Error",
@@ -62,7 +75,8 @@
       "projectManagement": {
         "projectManagement": "Manajemen Proyek",
         "project": "Proyek"
-      }
+      },
+      "projectTransaction": "Transaksi Proyek"
     },
     "pagination": {
       "total": "Total",

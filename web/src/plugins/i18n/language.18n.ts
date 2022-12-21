@@ -17,13 +17,18 @@ import companyId from '@/features/master/company/locale/company.id.locale.json'
 import projectEn from '@/features/project-management/project/locale/project.en.locale.json'
 import projectId from '@/features/project-management/project/locale/project.id.locale.json'
 
+// Project Transaction
+import projectTransactionEn from '@/features/project-transaction/locale/project-transaction.en.locale.json'
+import projectTransactionId from '@/features/project-transaction/locale/project-transaction.id.locale.json'
+
 const language = {
   [APP_LANGUAGE.EN]: {
     translation: {
       ...appEn,
       ...authEn,
       ...companyEn,
-      ...projectEn
+      ...projectEn,
+      ...projectTransactionEn
     }
   },
   [APP_LANGUAGE.ID]: {
@@ -31,7 +36,8 @@ const language = {
       ...appId,
       ...authId,
       ...companyId,
-      ...projectId
+      ...projectId,
+      ...projectTransactionId
     }
   }
 }

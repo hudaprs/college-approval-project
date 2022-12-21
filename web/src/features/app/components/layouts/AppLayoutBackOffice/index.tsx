@@ -20,6 +20,7 @@ import {
 // Antd
 import { MenuProps } from 'antd'
 import {
+  BarChartOutlined,
   DashboardOutlined,
   PartitionOutlined,
   ProjectOutlined
@@ -44,6 +45,9 @@ import { useAuth } from '@/features/auth/hooks/auth.hook'
 import AppImage from '@/assets/images/app.png'
 import LogoutIcon from '@/assets/images/icon/logout.png'
 
+// Constants
+import { AUTH_ROLE } from '@/features/auth/constant/auth-role.constant'
+
 const AppLayoutBackOffice = memo(() => {
   // Hook
   const location = useLocation()
@@ -53,42 +57,65 @@ const AppLayoutBackOffice = memo(() => {
   const {
     auth_authenticatedUserName,
     auth_authenticatedUserRole,
+    auth_isProfileCompleted,
     auth_LOGOUT
   } = useAuth()
   const menuItems = useMemo((): MenuProps['items'] => {
-    return [
-      {
-        key: '/back-office/dashboard',
-        icon: <DashboardOutlined />,
-        label: t('app.menu.dashboard'),
-        onClick: () => navigate('/back-office/dashboard')
-      },
-      {
-        key: '/back-office/master',
-        icon: <PartitionOutlined />,
-        label: t('app.menu.master.master'),
-        children: [
+    return auth_isProfileCompleted
+      ? [
           {
-            key: '/back-office/master/companies',
-            label: t('app.menu.master.company'),
-            onClick: () => navigate('/back-office/master/companies')
-          }
-        ]
-      },
-      {
-        key: '/back-office/project-management',
-        icon: <ProjectOutlined />,
-        label: t('app.menu.projectManagement.projectManagement'),
-        children: [
+            key: '/back-office/dashboard',
+            icon: <DashboardOutlined />,
+            label: t('app.menu.dashboard'),
+            onClick: () => navigate('/back-office/dashboard')
+          },
           {
-            key: '/back-office/project-management/projects',
-            label: t('app.menu.projectManagement.project'),
-            onClick: () => navigate('/back-office/project-management/projects')
+            key: '/back-office/master',
+            icon: <PartitionOutlined />,
+            label: t('app.menu.master.master'),
+            children: [
+              {
+                key: '/back-office/master/companies',
+                label: t('app.menu.master.company'),
+                onClick: () => navigate('/back-office/master/companies')
+              }
+            ]
+          },
+          {
+            key: '/back-office/project-management',
+            icon: <ProjectOutlined />,
+            label: t('app.menu.projectManagement.projectManagement'),
+            children: [
+              {
+                key: '/back-office/project-management/projects',
+                label: t('app.menu.projectManagement.project'),
+                onClick: () =>
+                  navigate('/back-office/project-management/projects')
+              }
+            ]
+          },
+          {
+            key: '/back-office/project-transaction',
+            icon: <BarChartOutlined />,
+            label: t('app.menu.projectTransaction'),
+            onClick: () => navigate('/back-office/project-transaction')
           }
-        ]
-      }
-    ]
-  }, [t, navigate])
+        ].filter(item => {
+          const coreFeatureName = item.key.split('/')?.filter(key => key)?.[1]
+
+          return auth_authenticatedUserRole &&
+            [
+              AUTH_ROLE.CLIENT,
+              AUTH_ROLE.CEO,
+              AUTH_ROLE.CFO,
+              AUTH_ROLE.CTO,
+              AUTH_ROLE.MARKETING
+            ].includes(auth_authenticatedUserRole)
+            ? !['master'].includes(coreFeatureName)
+            : item
+        })
+      : []
+  }, [auth_isProfileCompleted, t, navigate, auth_authenticatedUserRole])
   const selectedMenuItem = useMemo((): string | undefined => {
     return menuItems
       ?.find(menuItem => menuItem?.key?.toString()?.includes(location.pathname))
@@ -121,7 +148,7 @@ const AppLayoutBackOffice = memo(() => {
       style={{ display: 'flex', overflowX: 'auto', minHeight: '100vh' }}
     >
       {/* Sidebar */}
-      <AppBaseLayoutSider collapsed={false}>
+      <AppBaseLayoutSider collapsed={false} width={250}>
         <div className='flex w-full flex-col justify-between'>
           <div style={{ minHeight: '90vh' }}>
             {/* Sidebar - Header */}

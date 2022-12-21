@@ -1,0 +1,47 @@
+{
+  "project": {
+    "resetDecision": "Reset Keputusan",
+    "title": {
+      "show": "Detail Transaksi Proyek",
+      "handle": "Tangani Transaksi Proyek",
+      "reject": "Tolak Proyek"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nama",
+      "budget": "Budget",
+      "startDate": "Tanggal Mulai",
+      "endDate": "Tanggal Selesai",
+      "users": "User"
+    },
+    "form": {
+      "users": "Users",
+      "rejectReason": "Alasan Tolak"
+    },
+    "formPlaceholder": {
+      "users": "Pilih users",
+      "rejectReason": "Masukan alasan penolakan"
+    },
+    "alert": {
+      "successCreated": "Proyek berhasil dibuat",
+      "successUpdated": "Proyek berhasil diubah",
+      "successDeleted": "Proyek berhasil dihapus",
+      "ceoRejected": "CEO telah menolak proyek ini, anda hanya bisa melakukan penolakan atau segera diskusikan dengan CEO",
+      "twoCLevelRejected": "Lebih dari 2 C-Level telah menolak proyek ini, anda hanya bisa melakukan penolakan atau segera diskusikan dengan C-Level"
+    },
+    "approval": {
+      "approve": "Setujui",
+      "reject": "Tolak",
+      "assignedAt": "Diassign pada",
+      "noReason": "Belum ada alasan penolakan",
+      "approvedAt": "Disetujui Pada",
+      "rejectedAt": "Ditolak Pada"
+    },
+    "ask": {
+      "approve": "Apakah anda yakin ingin menyetujui data ini?",
+      "reject": "Apakah anda yakin ingin menolak data ini?",
+      "submit": "Apakah anda yakin ingin mengirim data ini?",
+      "resetDecision": "Apakah anda yakin ingin mereset keputusan anda untuk proyek ini?"
+    }
+  }
+}

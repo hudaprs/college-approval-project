@@ -21,7 +21,7 @@ export const projectApi = emptySplitApi.injectEndpoints({
       IProjectAttrsList | void
     >({
       query: payload => ({
-        url: '/v1/master/projects',
+        url: '/v1/project-management/projects',
         params: payload?.query
       })
     }),
@@ -29,14 +29,14 @@ export const projectApi = emptySplitApi.injectEndpoints({
       IProjectResponseDetail,
       IProjectAttrsDetail
     >({
-      query: payload => `/v1/master/projects/${payload.params.id}`
+      query: payload => `/v1/project-management/projects/${payload.params.id}`
     }),
     project_create: builder.mutation<
       IProjectResponseDetail,
       IProjectAttrsCreate
     >({
       query: payload => ({
-        url: `/v1/master/projects`,
+        url: `/v1/project-management/projects`,
         method: 'POST',
         body: payload.body
       })
@@ -46,7 +46,7 @@ export const projectApi = emptySplitApi.injectEndpoints({
       IProjectAttrsUpdate
     >({
       query: payload => ({
-        url: `/v1/master/projects/${payload.params.id}`,
+        url: `/v1/project-management/projects/${payload.params.id}`,
         method: 'PATCH',
         body: payload.body
       })
@@ -56,7 +56,7 @@ export const projectApi = emptySplitApi.injectEndpoints({
       IProjectAttrsDelete
     >({
       query: payload => ({
-        url: `/v1/master/projects/${payload.params.id}`,
+        url: `/v1/project-management/projects/${payload.params.id}`,
         method: 'DELETE'
       })
     })

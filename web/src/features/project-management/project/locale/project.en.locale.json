@@ -12,7 +12,8 @@
       "documents": "Documents",
       "description": "Description",
       "startDate": "Start Date",
-      "endDate": "End Date"
+      "endDate": "End Date",
+      "transactions": "Transactions"
     },
     "form": {
       "name": "Name",
@@ -33,6 +34,12 @@
       "successCreated": "Project has been created",
       "successUpdated": "Project has been updated",
       "successDeleted": "Project has been deleted"
+    },
+    "ask": {
+      "submit": "Are you sure want to submit?",
+      "edit": "Are you sure want to edit? This will affected to the transaction you made!",
+      "reorder": "Are you sure want to reorder this project?",
+      "onGoingTransaction": "Are you sure want to edit? This edit wont affect to current transaction!"
     }
   }
 }

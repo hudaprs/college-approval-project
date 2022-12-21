@@ -8,6 +8,7 @@
     "our": "Our",
     "limit": "Limit",
     "logout": "Logout",
+    "reorder": "Reorder",
     "locale": {
       "en": "English",
       "id": "Indonesia"
@@ -22,13 +23,24 @@
       "facebook": "Facebook"
     },
     "status": {
+      "status": "Status",
       "complete": "Complete",
       "notComplete": "Not Complete"
     },
     "table": {
+      "createdBy": "Created By",
       "createdAt": "Created At",
       "updatedAt": "Updated At",
       "action": "Action"
+    },
+    "form": {
+      "rejectReason": "Reject Reason",
+      "rejectedDate": "Rejected Date",
+      "status": "Status"
+    },
+    "formPlaceholder": {
+      "rejectReason": "Enter reject reason",
+      "status": "Select status"
     },
     "action": {
       "show": "Show",
@@ -36,13 +48,15 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "update": "Update",
-      "delete": "Delete"
+      "delete": "Delete",
+      "handle": "Handle"
     },
     "confirmation": {
       "areYouSure": "Are You sure?"
     },
     "alert": {
-      "logoutSuccess": "You Have Been Successfully Logout"
+      "logoutSuccess": "You Have Been Successfully Logout",
+      "waitingConfirmation": "Waiting Confirmation"
     },
     "error": {
       "error": "Error",
@@ -62,7 +76,8 @@
       "projectManagement": {
         "projectManagement": "Project Management",
         "project": "Project"
-      }
+      },
+      "projectTransaction": "Project Transaction"
     },
     "pagination": {
       "total": "Total",

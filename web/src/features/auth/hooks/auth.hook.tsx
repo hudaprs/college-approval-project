@@ -7,14 +7,18 @@ import { useAppSelector } from '@/features/app/hooks/app.hook'
 // Mutations
 import {
   auth_SET_AUTHENTICATED_USER,
+  auth_SET_PROFILE_COMPLETED,
   auth_SET_TOKEN,
   auth_LOGOUT
 } from '@/features/auth/redux/auth.slice'
 
 // Rtk
 import {
+  useAuth_completeProfileMutation,
+  useAuth_fetchCompanyListMutation,
   useAuth_loginMutation,
   useAuth_registerMutation,
+  useLazyAuth_checkProfileQuery,
   useLazyAuth_meQuery
 } from '@/features/auth/redux/auth.rtk'
 
@@ -32,6 +36,9 @@ const useAuth = () => {
   )
   const auth_authenticatedUserRole = useAppSelector(
     state => state.auth.auth_authenticatedUser.role
+  )
+  const auth_isProfileCompleted = useAppSelector(
+    state => state.auth.auth_isProfileCompleted
   )
   const auth_isAuthenticated = useMemo((): boolean => {
     return Boolean(auth_token) || false
@@ -51,6 +58,24 @@ const useAuth = () => {
     { isLoading: auth_isGetAuthenticatedUserLoading }
   ] = useLazyAuth_meQuery()
 
+  // Profile check
+  const [auth_profileCheck, { isLoading: auth_isProfileCheckLoading }] =
+    useLazyAuth_checkProfileQuery()
+
+  // Get company list
+  const [
+    auth_fetchCompanyList,
+    {
+      isLoading: auth_isCompanyListLoading,
+      data: auth_companyList,
+      reset: auth_resetCompanyList
+    }
+  ] = useAuth_fetchCompanyListMutation()
+
+  // Complete profile
+  const [auth_completeProfile, { isLoading: auth_isCompleteProfileLoading }] =
+    useAuth_completeProfileMutation()
+
   return {
     // State
     auth_token,
@@ -59,9 +84,11 @@ const useAuth = () => {
     auth_authenticatedUserEmail,
     auth_authenticatedUserRole,
     auth_isAuthenticated,
+    auth_isProfileCompleted,
 
     // Mutation
     auth_SET_AUTHENTICATED_USER,
+    auth_SET_PROFILE_COMPLETED,
     auth_SET_TOKEN,
     auth_LOGOUT,
 
@@ -69,9 +96,17 @@ const useAuth = () => {
     auth_login,
     auth_register,
     auth_getAuthenticatedUser,
+    auth_profileCheck,
+    auth_fetchCompanyList,
+    auth_completeProfile,
+    auth_resetCompanyList,
     auth_isLoginLoading,
     auth_isRegisterLoading,
-    auth_isGetAuthenticatedUserLoading
+    auth_isGetAuthenticatedUserLoading,
+    auth_isProfileCheckLoading,
+    auth_isCompanyListLoading,
+    auth_isCompleteProfileLoading,
+    auth_companyList
   }
 }
 

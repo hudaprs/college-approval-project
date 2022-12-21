@@ -34,14 +34,7 @@ const etcTable = createSlice({
       const _table: ({ id: number } & IEtcTablePagination)[] = []
 
       payload.forEach(table => {
-        _table.push({
-          id: table.id,
-          limit: table?.limit || 10,
-          column: table?.column || undefined,
-          sort: table?.sort || 'desc',
-          page: 1,
-          search: ''
-        })
+        _table.push({ id: table.id, ...PAGINATION_INITIAL_VALUE })
       })
 
       state.etcTable_list.push(..._table)
