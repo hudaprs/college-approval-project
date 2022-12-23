@@ -1,3 +1,5 @@
 .DS_STORE
 .idea
 *.zip
+# Local Netlify folder
+.netlify
