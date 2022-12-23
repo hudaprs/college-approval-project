@@ -29,6 +29,7 @@ class ProjectTransactionConstant
     {
         return [
             self::AGREEMENT_PROCESS,
+            self::REVISE,
             self::REVISED,
             self::INTERNAL_AGREEMENT_PROCESS,
         ];

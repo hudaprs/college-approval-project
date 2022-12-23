@@ -24,7 +24,7 @@ import { IModalProps } from './interfaces'
 import { useTranslation } from 'react-i18next'
 
 // Antd
-import { Alert, Col, Form, List, message, Row } from 'antd'
+import { Alert, Col, Divider, Form, List, message, Row } from 'antd'
 
 // Constants
 import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
@@ -35,6 +35,14 @@ import { currencyUtils_idr } from '@/features/app/utils/currency.utils'
 import { dateUtils_formatDate } from '@/features/app/utils/date.utils'
 import { AUTH_ROLE } from '@/features/auth/constant/auth-role.constant'
 import { IProjectTransactionUserRejectForm } from '@/features/project-transaction/interfaces/project-transaction.interface'
+import { CloudDownloadOutlined } from '@ant-design/icons'
+
+// PDF Make
+import * as pdfMake from 'pdfmake/build/pdfmake'
+import * as pdfFonts from 'pdfmake/build/vfs_fonts'
+
+const pdf = pdfMake
+pdf.vfs = pdfFonts.pdfMake.vfs
 
 const Modal = memo(
   ({
@@ -95,6 +103,117 @@ const Modal = memo(
       },
       [rejectForm]
     )
+
+    /**
+     * @description Download receipt
+     *
+     * @return {Promise<void>} Promise<void>
+     */
+    const onDownloadReceipt = useCallback(async (): Promise<void> => {
+      if (projectTransaction) {
+        pdfMake
+          .createPdf({
+            content: [
+              { text: 'Project Transaction', style: 'header' },
+              {
+                text: 'Here are the detail of your project, thank you for your cooperation',
+                style: 'text'
+              },
+              {
+                table: {
+                  widths: ['*', '*'],
+                  body: [
+                    ['Name', 'Budget'],
+                    [
+                      projectTransaction.active_project.name,
+                      currencyUtils_idr(
+                        projectTransaction.active_project.budget
+                      )
+                    ]
+                  ]
+                },
+                layout: 'noBorders',
+                style: 'marginBottomLow'
+              },
+              {
+                table: {
+                  widths: ['*'],
+                  body: [
+                    ['Description'],
+                    [projectTransaction.active_project.description]
+                  ]
+                },
+                layout: 'noBorders',
+                style: 'marginBottomLow'
+              },
+              {
+                table: {
+                  widths: ['*', '*'],
+                  body: [
+                    ['Start Date', 'End Date'],
+                    [
+                      projectTransaction.active_project.start_date,
+                      projectTransaction.active_project.end_date
+                    ]
+                  ]
+                },
+                layout: 'noBorders',
+                style: 'marginBottomLow'
+              },
+              {
+                table: {
+                  widths: ['*'],
+                  body: [['Status'], [projectTransaction.status]]
+                },
+                layout: 'noBorders',
+                style: 'marginBottomLow'
+              },
+              {
+                table: {
+                  widths: ['*', '*', '*'],
+                  body: [
+                    ['Approved Date', 'Reject Reason', 'Rejected Date'],
+                    [
+                      projectTransaction.approved_date,
+                      projectTransaction.reject_reason,
+                      projectTransaction.rejected_date
+                    ]
+                  ]
+                },
+                layout: 'noBorders',
+                style: 'marginBottomLow'
+              }
+            ],
+            styles: {
+              header: {
+                fontSize: 18,
+                bold: true
+              },
+              subheader: {
+                fontSize: 15,
+                bold: true
+              },
+              quote: {
+                italics: true
+              },
+              small: {
+                fontSize: 8
+              },
+              text: {
+                marginBottom: 10
+              },
+              marginBottomLow: {
+                marginBottom: 10
+              }
+            }
+          })
+          .download(
+            `${projectTransaction?.active_project.name}-${dateUtils_formatDate(
+              projectTransaction.created_at
+            )}`
+          )
+      }
+    }, [projectTransaction])
 
     /**
      * @description Reject project
@@ -512,6 +631,36 @@ const Modal = memo(
                 </Col>
               </Row>
             )}
+
+            {/* Download Receipt */}
+            {projectTransaction &&
+              [
+                PROJECT_TRANSACTION_STATUS.APPROVED,
+                PROJECT_TRANSACTION_STATUS.REJECTED
+              ].includes(projectTransaction.status) && (
+                <>
+                  <Divider />
+
+                  <Row className='mb-4 mt-8'>
+                    <Col span={24}>
+                      <div
+                        className='flex items-center flex-row gap-5 cursor-pointer'
+                        onClick={onDownloadReceipt}
+                      >
+                        <CloudDownloadOutlined size={24} />
+
+                        <AppBaseLabel
+                          fontSize={14}
+                          isBold
+                          style={{ color: '#1677ff' }}
+                        >
+                          {t('app.transaction.download.receipt')}
+                        </AppBaseLabel>
+                      </div>
+                    </Col>
+                  </Row>
+                </>
+              )}
           </Form>
         </AppBaseModal>
         {/* End Detail Form */}

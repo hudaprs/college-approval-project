@@ -82,6 +82,11 @@
     "pagination": {
       "total": "Total",
       "items": "Items"
+    },
+    "transaction": {
+      "download": {
+        "receipt": "Download Receipt"
+      }
     }
   }
 }

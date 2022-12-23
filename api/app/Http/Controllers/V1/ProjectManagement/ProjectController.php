@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\ProjectManagement;
 
+use App\Constants\ProjectTransactionConstant;
 use App\Http\Controllers\Controller;
 use App\Services\V1\ProjectManagement\ProjectService;
 use App\Services\V1\ProjectTransaction\ProjectTransactionService;
@@ -117,6 +118,9 @@ class ProjectController extends Controller
             $onGoingProjectTransaction = $this->projectTransactionService->getNotProcessedTransaction($id);
             if ($onGoingProjectTransaction) {
                 $onGoingProjectTransaction->active_project = $project;
+                if ($onGoingProjectTransaction->status === ProjectTransactionConstant::REVISE) {
+                    $onGoingProjectTransaction->status = ProjectTransactionConstant::REVISED;
+                }
                 $onGoingProjectTransaction->save();
             }
 

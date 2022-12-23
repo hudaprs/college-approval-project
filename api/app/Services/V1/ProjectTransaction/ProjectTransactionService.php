@@ -102,6 +102,10 @@ class ProjectTransactionService
             $projectTransaction->users()->sync($request->get('users'));
         }
 
+        if ($request->get('status') === ProjectTransactionConstant::APPROVED) {
+            $projectTransaction->approved_date = Carbon::now();
+        }
+
         $projectTransaction->save();
         $projectTransaction->load(['users']);
 

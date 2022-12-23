@@ -27,6 +27,7 @@ import { useAuth } from '@/features/auth/hooks/auth.hook'
 
 // Moment
 import moment from 'moment'
+import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
 
 const ProjectIndex = memo(() => {
   // Hook
@@ -212,7 +213,9 @@ const ProjectIndex = memo(() => {
       appBaseModalConfirm({
         title: t(
           `project.ask.${
-            activeProjectTransaction
+            activeProjectTransaction &&
+            activeProjectTransaction.status !==
+              PROJECT_TRANSACTION_STATUS.REVISE
               ? 'onGoingTransaction'
               : isReorder
               ? 'reorder'

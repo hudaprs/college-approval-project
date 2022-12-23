@@ -81,6 +81,11 @@
     "pagination": {
       "total": "Total",
       "items": "Item"
+    },
+    "transaction": {
+      "download": {
+        "receipt": "Unduh Dokumen"
+      }
     }
   }
 }

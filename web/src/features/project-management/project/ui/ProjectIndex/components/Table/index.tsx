@@ -25,6 +25,7 @@ import { ColumnsType } from 'antd/lib/table'
 import { currencyUtils_idr } from '@/features/app/utils/currency.utils'
 import { dateUtils_formatDate } from '@/features/app/utils/date.utils'
 import { ProjectTransactionStatusTag } from '@/features/project-transaction/components'
+import { PROJECT_TRANSACTION_STATUS } from '@/features/project-transaction/constant/project-transaction-status.constant'
 
 const Table = memo(
   ({
@@ -147,7 +148,10 @@ const Table = memo(
                     )
                   }
                 ].filter(item => {
-                  return record.active_project_transaction
+                  return record.active_project_transaction?.status ===
+                    PROJECT_TRANSACTION_STATUS.REVISE
+                    ? ['1', '2'].includes(item.key)
+                    : record.active_project_transaction
                     ? ['1'].includes(item.key)
                     : item
                 })}
