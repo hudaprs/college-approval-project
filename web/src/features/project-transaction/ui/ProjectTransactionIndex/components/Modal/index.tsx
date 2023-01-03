@@ -41,8 +41,7 @@ import { CloudDownloadOutlined } from '@ant-design/icons'
 import * as pdfMake from 'pdfmake/build/pdfmake'
 import * as pdfFonts from 'pdfmake/build/vfs_fonts'
 
-const pdf = pdfMake
-pdf.vfs = pdfFonts.pdfMake.vfs
+;(pdfMake as any).vfs = pdfFonts.pdfMake.vfs
 
 const Modal = memo(
   ({
