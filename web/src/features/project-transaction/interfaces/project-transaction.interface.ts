@@ -40,3 +40,9 @@ export interface IProjectTransactionForm {
 export interface IProjectTransactionUserRejectForm {
   reject_reason: string
 }
+
+export interface IProjectTransactionBudgetCalculation {
+  month_number: number
+  month: string
+  budget: number
+}

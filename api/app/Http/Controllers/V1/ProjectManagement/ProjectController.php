@@ -53,7 +53,7 @@ class ProjectController extends Controller
             if (!$request->has('project_id')) {
                 $project = $project->createUpdate([
                     'name' => $request->get('name'),
-                    'budget' => $request->get('budget'),
+                    'budget' => (float)$request->get('budget'),
                     'documents' => $request->get('documents'),
                     'description' => $request->get('description'),
                     'start_date' => $request->get('start_date'),

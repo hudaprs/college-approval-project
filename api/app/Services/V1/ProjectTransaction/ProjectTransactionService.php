@@ -11,6 +11,7 @@ use App\Models\ProjectTransaction;
 use App\Traits\ResponseApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ProjectTransactionService
@@ -45,8 +46,7 @@ class ProjectTransactionService
                     'reject_reason' => 'required|string|max:255',
                 ];
                 return;
-        }
-        ;
+        };
 
         $request->validate($validation);
     }
@@ -162,7 +162,7 @@ class ProjectTransactionService
         $projectTransaction['project_transaction']
             ->users()
             ->syncWithoutDetaching([
-                    $projectTransaction['project_transaction_user']->id => [
+                $projectTransaction['project_transaction_user']->id => [
                     'approved_date' => null,
                     'rejected_date' => null,
                     'reject_reason' => null,
@@ -177,7 +177,7 @@ class ProjectTransactionService
     {
         $projectTransactionUser = $this->getAssignedUser($id);
         $projectTransactionUser['project_transaction']->users()->syncWithoutDetaching([
-                $projectTransactionUser['project_transaction_user']->id => [
+            $projectTransactionUser['project_transaction_user']->id => [
                 'rejected_date' => Carbon::now(),
                 'reject_reason' => $payload['reject_reason']
             ]
@@ -196,4 +196,15 @@ class ProjectTransactionService
         return $projectTransaction;
     }
 
+    public function calculateProjectBudget()
+    {
+        return ProjectTransaction::query()
+            ->select(
+                DB::raw('MONTH(created_at) month_number, MONTHNAME(created_at) month'),
+                DB::raw("SUM(CAST(JSON_EXTRACT(active_project, '$.budget') as float)) as budget"),
+            )
+            ->groupby('month')
+            ->orderBy('month_number', 'asc')
+            ->get();
+    }
 }

@@ -11,7 +11,8 @@ import {
   useProjectTransaction_updateStatusMutation,
   useProjectTransaction_userRejectMutation,
   useProjectTransaction_userApproveMutation,
-  useProjectTransaction_userResetDecisionMutation
+  useProjectTransaction_userResetDecisionMutation,
+  useLazyProjectTransaction_fetchBudgetCalculationQuery
 } from '@/features/project-transaction/redux/project-transaction.rtk'
 
 // Constants
@@ -88,6 +89,16 @@ const useProjectTransaction = () => {
     { isLoading: projectTransaction_isUserResetDecisionLoading }
   ] = useProjectTransaction_userResetDecisionMutation()
 
+  // Project Transaction User Reset Decision
+  const [
+    projectTransaction_fetchBudgetCalculation,
+    {
+      isLoading: projectTransaction_isFetchBudgetCalculationLoading,
+      isFetching: projectTransaction_isFetchBudgetCalculationFetching,
+      data: projectTransaction_budgetCalculation
+    }
+  ] = useLazyProjectTransaction_fetchBudgetCalculationQuery()
+
   // Check if project transaction editable
   const projectTransaction_isEditable = useCallback(
     (status: PROJECT_TRANSACTION_STATUS | undefined): boolean => {
@@ -131,6 +142,10 @@ const useProjectTransaction = () => {
     projectTransaction_detail,
     projectTransaction_statusList,
     projectTransaction_userList,
+    projectTransaction_fetchBudgetCalculation,
+    projectTransaction_isFetchBudgetCalculationLoading,
+    projectTransaction_isFetchBudgetCalculationFetching,
+    projectTransaction_budgetCalculation,
 
     // Hook
     projectTransaction_isEditable

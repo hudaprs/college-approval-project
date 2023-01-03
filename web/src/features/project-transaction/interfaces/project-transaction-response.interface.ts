@@ -3,7 +3,10 @@ import {
   IApiResponse,
   IApiResponsePagination
 } from '@/features/app/interfaces/app-api.interface'
-import { IProjectTransaction } from './project-transaction.interface'
+import {
+  IProjectTransaction,
+  IProjectTransactionBudgetCalculation
+} from './project-transaction.interface'
 import { IAuthAuthenticatedUser } from '@/features/auth/interfaces/auth.interface'
 
 // Constants
@@ -20,4 +23,8 @@ export type IProjectTransactionResponseStatus = IApiResponse<
 >
 export type IProjectTransactionResponseUser = IApiResponse<
   IAuthAuthenticatedUser[]
+>
+
+export type IProjectTransactionResponseBudgetCalculation = IApiResponse<
+  IProjectTransactionBudgetCalculation[]
 >

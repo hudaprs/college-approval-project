@@ -125,4 +125,13 @@ class ProjectTransactionController extends Controller
             return $this->error($e);
         }
     }
+
+    public function calculateProjectBudget()
+    {
+        try {
+            return $this->success('Calculate project transaction budget success', $this->projectTransactionService->calculateProjectBudget());
+        } catch (\Exception $e) {
+            return $this->error($e);
+        }
+    }
 }

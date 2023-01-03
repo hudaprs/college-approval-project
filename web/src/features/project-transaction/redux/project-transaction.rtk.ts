@@ -9,6 +9,7 @@ import {
   IProjectTransactionAttrsUserResetDecision
 } from '@/features/project-transaction/interfaces/project-transaction-attrs.interface'
 import {
+  IProjectTransactionResponseBudgetCalculation,
   IProjectTransactionResponseDetail,
   IProjectTransactionResponsePaginate,
   IProjectTransactionResponseStatus,
@@ -98,6 +99,14 @@ export const projectTransactionApi = emptySplitApi.injectEndpoints({
         url: `/v1/project-transaction/users/reset/${payload.params.id}`,
         method: 'PATCH'
       })
+    }),
+    projectTransaction_fetchBudgetCalculation: builder.query<
+      IProjectTransactionResponseBudgetCalculation,
+      void
+    >({
+      query: () => ({
+        url: `/v1/project-transaction/calculation/budget`
+      })
     })
   }),
   overrideExisting: false
@@ -112,5 +121,6 @@ export const {
   useProjectTransaction_updateStatusMutation,
   useProjectTransaction_userApproveMutation,
   useProjectTransaction_userRejectMutation,
-  useProjectTransaction_userResetDecisionMutation
+  useProjectTransaction_userResetDecisionMutation,
+  useLazyProjectTransaction_fetchBudgetCalculationQuery
 } = projectTransactionApi

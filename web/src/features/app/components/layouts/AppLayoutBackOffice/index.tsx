@@ -9,7 +9,8 @@ import {
   AppBaseLayoutContent,
   AppBaseMenu,
   AppBaseLabel,
-  appBaseModalConfirm
+  appBaseModalConfirm,
+  AppBaseHeader
 } from '@/features/app/components'
 import {
   StyledUserInformation,
@@ -190,6 +191,10 @@ const AppLayoutBackOffice = memo(() => {
       </AppBaseLayoutSider>
       <AppBaseLayout isContent collapsed={false}>
         <AppBaseLayoutContent>
+          {/* Header */}
+          <AppBaseHeader title={''} />
+
+          {/* Content */}
           <AppRouteWrapper />
         </AppBaseLayoutContent>
       </AppBaseLayout>
